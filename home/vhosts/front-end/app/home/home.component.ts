@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {PictissouService} from '../pictissou.service';
 
 @Component({
     selector: 'app-home',
@@ -7,12 +7,18 @@ import {HttpClient} from '@angular/common/http';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-    private resultData: String = '';
+    public images: {
+        recent: Array<String>,
+        popular: Array<String>
+    };
 
-    constructor(private http: HttpClient) { }
+    constructor(private pict: PictissouService) {
+        this.images = {recent: [], popular: []};
+    }
 
     ngOnInit() {
-        this.resultData = 'This content has been added on runtime';
+        this.images.recent = ['', '', '', ''];
+        this.images.popular = ['', '', '', ''];
     }
 
 }

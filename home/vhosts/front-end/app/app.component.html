@@ -1,12 +1,23 @@
-<h1>Bienvenue sur Pictissou</h1>
-
-<header>
-  <nav>
-    <ul>
-      <li><a routerLink="">Home</a></li>
-      <li><a routerLink="cgu">CGU</a></li>
-    </ul>
-  </nav>
+<header >
+    <nav>
+        <button mat-button routerLink="">Pictissou</button>
+        <button mat-button mat-raised-button routerLink="">Accueil</button>
+        <button mat-button mat-raised-button routerLink="add-image">Ajouter une image</button>
+        <button mat-button mat-raised-button routerLink="cgu">CGU</button>
+        <button class="right-pushed" *ngIf="! pict.isLogged()" routerLink="login" mat-button>Se connecter</button>
+        <button class="right-pushed" *ngIf="pict.isLogged()" (click)="pict.signOut()" mat-button>Se déconnecter</button>
+        <button class="right-pushed" *ngIf="pict.isLogged()" mat-button>Connecté en tant que: {{ pict.user.pseudo }}</button>
+    </nav>
 </header>
 
-<router-outlet></router-outlet>
+<aside id="site-banner">
+    <img id="banner-img" src="/assets/banner.png">
+</aside>
+
+<div class="main-content">
+    <router-outlet></router-outlet>
+</div>
+
+<footer>
+    <p>Copyright 2018 - Made with Angular5</p>
+</footer>

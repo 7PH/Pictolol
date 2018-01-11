@@ -8,36 +8,45 @@ import { CguComponent } from './cgu/cgu.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatToolbarModule, MatIconModule, MatCardModule } from '@angular/material';
+import {MatButtonModule, MatToolbarModule, MatIconModule, MatCardModule, MatMenuModule, MatTabsModule} from '@angular/material';
+import {PictissouService} from './pictissou.service';
+import { CollectionsComponent } from './collections/collections.component';
+import { NotfoundComponent } from './notfound/notfound.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: '**', component: CguComponent }
+    { path: '', component: HomeComponent },
+    { path: 'collections', component: CollectionsComponent},
+    { path: 'cgu', component: CguComponent },
+    { path: '**', component: NotfoundComponent }
 ];
 
 
 RouterModule.forRoot([ ]);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    CguComponent
-  ],
-  imports: [
-    RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
-    ),
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatCardModule,
-    HttpClientModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        CguComponent,
+        CollectionsComponent,
+        NotfoundComponent
+    ],
+    imports: [
+        RouterModule.forRoot(
+            appRoutes,
+            { enableTracing: true } // <-- debugging purposes only
+        ),
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatCardModule,
+        MatTabsModule,
+        HttpClientModule
+    ],
+    providers: [PictissouService],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

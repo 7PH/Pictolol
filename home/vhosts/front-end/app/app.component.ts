@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {User} from './models/User';
+import {PictissouService} from './pictissou.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  public readonly title = 'Pictissou';
+
+  constructor(public pict: PictissouService) { }
 }
