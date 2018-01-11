@@ -19,6 +19,7 @@ public class Image {
 	private int id;
 	private String url;
 	private String title;
+	private int view;
 	
 	@ManyToOne
 	private Category category;
@@ -93,6 +94,14 @@ public class Image {
 		this.tags = tags;
 	}
 
+	public int getView() {
+		return view;
+	}
+
+	public void setView(int view) {
+		this.view = view;
+	}
+
 	public List<Collection> getCollections() {
 		return collections;
 	}
@@ -105,14 +114,6 @@ public class Image {
 		return imageComments;
 	}
 
-	public void setImageLikes(List<ImageLike> imageLikes) {
-		this.imageLikes = imageLikes;
-	}
-	
-	public List<ImageLike> getImageLikes() {
-		return imageLikes;
-	}
-
 	public void setImageComments(List<ImageComment> imageComments) {
 		this.imageComments = imageComments;
 	}
@@ -123,6 +124,14 @@ public class Image {
 
 	public void setImageViews(List<ImageView> imageViews) {
 		this.imageViews = imageViews;
+	}
+
+	public List<ImageLike> getImageLikes() {
+		return imageLikes;
+	}
+
+	public void setImageLikes(List<ImageLike> imageLikes) {
+		this.imageLikes = imageLikes;
 	}
 
 }

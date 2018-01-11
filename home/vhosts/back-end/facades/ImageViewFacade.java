@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import entities.*;
@@ -58,12 +59,14 @@ public class ImageViewFacade {
 		iv.setImage(null);
 	}
 	public void deleteImageViewFromImageBeforeDate(int idImage, Date date){
-		Image i=em.find(Image.class, idImage);
-		List<ImageView> imageViews=i.getImageViews();
-		for(ImageView iv : imageViews){
-			if(iv.getId().getDate().before(date))
-				iv.setImage(null);
-		}
+		String sql = "delete FROM ImageView iv where iv.imageId="+idImage+" and iv.date<="+date;
+		em.createQuery(sql);
+	}
+	public int isView(String ip,int idImage){
+		String sql = "select count(iv.ip) FROM ImageView iv where iv.imageId="+idImage+" and ip="+ip;
+		Query q = em.createQuery(sql);
+		int count = (int) q.getSingleResult();
+		return count;
 	}
 	
 }
