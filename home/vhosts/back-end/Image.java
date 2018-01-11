@@ -105,6 +105,14 @@ public class Image {
 		return imageComments;
 	}
 
+	public void setImageLikes(List<ImageLike> imageLikes) {
+		this.imageLikes = imageLikes;
+	}
+	
+	public List<ImageLike> getImageLikes() {
+		return imageLikes;
+	}
+
 	public void setImageComments(List<ImageComment> imageComments) {
 		this.imageComments = imageComments;
 	}

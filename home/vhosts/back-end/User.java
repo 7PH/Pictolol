@@ -26,6 +26,9 @@ public class User {
 	List<ImageComment> imageComments;
 	
 	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
+	List<ImageLike> imageLikes;
+	
+	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
 	List<Collection> collections;
 
 	public User() {
@@ -78,6 +81,14 @@ public class User {
 
 	public void setImageComments(List<ImageComment> imageComments) {
 		this.imageComments = imageComments;
+	}
+	
+	public List<ImageLike> getImageLikes() {
+		return imageLikes;
+	}
+
+	public void setImageLikes(List<ImageLike> imageLikes) {
+		this.imageLikes = imageLikes;
 	}
 
 	public List<Collection> getCollections() {
