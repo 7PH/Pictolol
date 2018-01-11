@@ -15,16 +15,14 @@ public class CollectionFacade {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public void addCollection(String description,int like){
+	public void addCollection(String description){
 		Collection c=new Collection();
 		c.setDescription(description);
-		c.setLikeImage(like);
 		em.persist(c);
 	}
-	public void editCollection(int id, String description,int like){
+	public void editCollection(int id, String description){
 		Collection c=em.find(Collection.class, id);
 		c.setDescription(description);
-		c.setLikeImage(like);
 		em.persist(c);
 	}
 	public void deleteCollection(int id){
@@ -34,6 +32,9 @@ public class CollectionFacade {
 	public List<Collection> collections(){
 		TypedQuery<Collection> req = em.createQuery("FROM Collection t",Collection.class);
 		return req.getResultList();
+	}
+	public Collection getCollectionById(int idCollection){
+		return em.find(Collection.class, idCollection);
 	}
 	
 	public List<Collection> collectionsByUser(int id){

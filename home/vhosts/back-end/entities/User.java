@@ -18,6 +18,7 @@ public class User {
 	private String pseudo;
 	private String email;
 	private String password;
+	private int right;
 	
 	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
 	List<Image> images;
@@ -26,10 +27,10 @@ public class User {
 	List<ImageComment> imageComments;
 	
 	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
-	List<ImageLike> imageLikes;
-	
-	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
 	List<Collection> collections;
+
+	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
+	List<ImageLike> imageLikes;
 
 	public User() {
 		super();
@@ -67,6 +68,18 @@ public class User {
 		this.password = password;
 	}
 
+	public int getRight() {
+		return right;
+	}
+
+	public void setRight(int right) {
+		this.right = right;
+	}
+
+	public void setImageLikes(List<ImageLike> imageLikes) {
+		this.imageLikes = imageLikes;
+	}
+
 	public List<Image> getImages() {
 		return images;
 	}
@@ -82,14 +95,6 @@ public class User {
 	public void setImageComments(List<ImageComment> imageComments) {
 		this.imageComments = imageComments;
 	}
-	
-	public List<ImageLike> getImageLikes() {
-		return imageLikes;
-	}
-
-	public void setImageLikes(List<ImageLike> imageLikes) {
-		this.imageLikes = imageLikes;
-	}
 
 	public List<Collection> getCollections() {
 		return collections;
@@ -97,6 +102,14 @@ public class User {
 
 	public void setCollections(List<Collection> collections) {
 		this.collections = collections;
+	}
+
+	public List<ImageLike> getImageLikes() {
+		return imageLikes;
+	}
+
+	public void setImageViews(List<ImageLike> imageLikes) {
+		this.imageLikes = imageLikes;
 	}
 	
 }

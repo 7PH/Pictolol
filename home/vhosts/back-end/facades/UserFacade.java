@@ -37,8 +37,12 @@ public class UserFacade {
 		TypedQuery<User> req = em.createQuery("FROM User u",User.class);
 		return req.getResultList();
 	}
+	public User getUserById(int idUser){
+		return em.find(User.class, idUser);
+	}
 	
-	public List<Image> imagessByUser(int id){
+	public List<Image> imagesByUser(int id){
+		viewUpdate();
 		User u = em.find(User.class, id);
 		return u.getImages();
 	}
@@ -50,6 +54,15 @@ public class UserFacade {
 	public void deleteImageFromUser(int idImage){
 		Image i = em.find(Image.class,idImage);
 		i.setUser(null);
+	}
+	
+	public void viewUpdate(){
+		String sql = "update Image i set i.view=(select count(im.imageId) from ImageView im where im.imageId=i.id)";
+		em.createQuery(sql);
+	}
+	public User verifyUser(String email, String password){
+		TypedQuery<User> req = em.createQuery("FROM User u where u.email="+email+" and password="+password,User.class);
+		return req.getResultList().get(0);
 	}
 	
 }

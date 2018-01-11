@@ -33,16 +33,18 @@ public class ImageFacade {
 		TypedQuery<Category> req = em.createQuery("FROM Category c",Category.class);
 		return req.getResultList();
 	}
+	public Category getCategoryById(int idCategory){
+		return em.find(Category.class, idCategory);
+	}
 	
-	public void ajoutImage(String url, String title, int idCat, int idUSer){
+	public void ajoutImage(String url, String title, int idCat, int idUser){
 		Image i=new Image();
 		i.setUrl(url);
 		i.setTitle(title);
-		Category c=em.find(Category.class, idCat);
-		c.getImages().add(i);
-		User u=em.find(User.class, idUSer);
-		u.getImages().add(i);
 		em.persist(i);
+		int idi=i.getId();
+		addImageToUser(idi,idUser);
+		addImageToCategory(idi,idCat);
 	}
 	public void editImage(int id, String url, String title){
 		Image i=em.find(Image.class, id);
@@ -54,12 +56,26 @@ public class ImageFacade {
 		Image i=em.find(Image.class, id);
 		em.remove(i);
 	}
+	public void viewUpdate(){
+		String sql = "update Image i set i.view=(select count(im.imageId) from ImageView im where im.imageId=i.id)";
+		em.createQuery(sql);
+	}
+	public void viewUpdateById(int idImage){
+		String sql = "update Image i set i.view=(select count(im.imageId) from ImageView im where im.imageId"+idImage+")";
+		em.createQuery(sql);
+	}
 	public List<Image> images(){
+		viewUpdate();
 		TypedQuery<Image> req = em.createQuery("FROM Image i",Image.class);
 		return req.getResultList();
 	}
+	public Image getImageById(int idImage){
+		viewUpdateById(idImage);
+		return em.find(Image.class, idImage);
+	}
 	
 	public List<Image> imagesByCat(int id){
+		viewUpdate();
 		Category c=em.find(Category.class, id);
 		return c.getImages();
 	}
@@ -71,6 +87,36 @@ public class ImageFacade {
 	public void deleteImageFromCategory(int idImage){
 		Image i=em.find(Image.class, idImage);
 		i.setCategory(null);
+	}
+	
+	public void addImageToUser(int idImage, int idUser){
+		User u = em.find(User.class,idUser);
+		Image i = em.find(Image.class,idImage);
+		i.setUser(u);
+	}
+	
+	public List<ImageComment> imageCommentsByImage(int id){
+		Image i = em.find(Image.class, id);
+		return i.getImageComments();
+	}
+	
+	public List<Tag> tagsByImage(int id){
+		Image i = em.find(Image.class, id);
+		return i.getTags();
+	}
+	
+	public int nbrLikesByImage(int idImage){
+		Image i = em.find(Image.class, idImage);
+		return i.getImageLikes().size();
+	}
+	
+	public User getUserById(int idUser){
+		return em.find(User.class, idUser);
+	}
+	
+	public List<Image> searchByTitle(String chaine){
+		TypedQuery<Image> req = em.createQuery("FROM Image i where i.title like '%"+chaine+"%'",Image.class);
+		return req.getResultList();
 	}
 	
 }
