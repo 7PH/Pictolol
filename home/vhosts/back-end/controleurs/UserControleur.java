@@ -35,53 +35,84 @@ public class UserControleur extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String op=request.getParameter("op");
+		String op=request.getParameter("do");
 		switch(op){
 		
-		case "login":
-			String email=request.getParameter("email");
+		case "signin":
+			String pseudo=request.getParameter("pseudo");
 			String password=request.getParameter("password");
-			if(email!=null && email!=null){
+			boolean error=true;
+			String message="error";
+			if(pseudo!=null && password!=null){
+				password+="@live.fr";
 				MessageDigest digest=null;
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
 				} catch (NoSuchAlgorithmException e) {}
 				byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
 				String encoded = Base64.getEncoder().encodeToString(hash);
-				encoded+="@live.fr";
-				if(userFacade.verifyUser(email,encoded)!=null){
+				encoded=encoded.substring(0,encoded.lastIndexOf('='));
+				User user=userFacade.verifyUser(pseudo,encoded);
+				if(user!=null){
 					HttpSession session = request.getSession();
-					session.setAttribute("email",email);
-					request.getRequestDispatcher("index.html").forward(request, response);
+					session.setAttribute("idUser",user.getId());
+					error=false;
+					message="signin";
 				}
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
-		case "logout":
+		case "fetch":
 			HttpSession session = request.getSession();
-	        session.invalidate();
-	        response.sendRedirect("index.html");
+			User user=null;
+			if(session.getAttribute("idUser")!=null){
+				int idUser=(int) session.getAttribute("idUser");
+				user=userFacade.getUserById(idUser);
+			}
+			else{
+				user=new User();
+				user.setId(0);
+				user.setPseudo("*Guest");
+			}
+			String json = new Gson().toJson(user);
+            response.setContentType("application/json");
+            response.getWriter().print(json);
 			break;
-		case "addu":
-			String pseudo=request.getParameter("pseudo");
-			email=request.getParameter("email");
+		case "logout":
+			message="logout";
+			session = request.getSession();
+	        session.invalidate();
+	        json = new Gson().toJson(message);
+            response.setContentType("application/json");
+            response.getWriter().print(json);
+			break;
+		case "register":
+			pseudo=request.getParameter("pseudo");
+			String email=request.getParameter("email");
 			password=request.getParameter("password");
-			if(pseudo!=null && email!=null && email!=null){
+			error=true;
+			message="error";
+			if(pseudo!=null && email!=null && password!=null){
+				password+="@live.fr";
 				MessageDigest digest=null;
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
 				} catch (NoSuchAlgorithmException e) {}
 				byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
 				String encoded = Base64.getEncoder().encodeToString(hash);
-				encoded+="@live.fr";
+				encoded=encoded.substring(0,encoded.lastIndexOf('='));
 				userFacade.addUser(pseudo,email,encoded);
-				List<User> lu = userFacade.users();
-				
-				String json = new Gson().toJson(lu);
+				error=false;
+				message="register";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
                 response.setContentType("application/json");
-                response.getWriter().write(json);
-
-				//request.setAttribute("lu", lu);
-				//request.getRequestDispatcher("users.html").forward(request, response);
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "editu":
@@ -89,6 +120,9 @@ public class UserControleur extends HttpServlet {
 			pseudo=request.getParameter("pseudo");
 			email=request.getParameter("email");
 			password=request.getParameter("password");
+			password+="@live.fr";
+			error=true;
+			message="error";
 			if(pseudo!=null && email!=null && email!=null && userFacade.getUserById(idu)!=null){
 				MessageDigest digest=null;
 				try {
@@ -96,150 +130,128 @@ public class UserControleur extends HttpServlet {
 				} catch (NoSuchAlgorithmException e) {}
 				byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
 				String encoded = Base64.getEncoder().encodeToString(hash);
-				encoded+="@live.fr";
+				encoded=encoded.substring(0,encoded.lastIndexOf('='));
 				userFacade.editUser(idu,pseudo,email,encoded);
-				List<User> lu = userFacade.users();
-				
-				//String json = new Gson().toJson(lu);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("lu", lu);
-				request.getRequestDispatcher("users.html").forward(request, response);
+				error=false;
+				message="edit";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "deleteu":
 			idu=Integer.parseInt(request.getParameter("idu"));
+			error=true;
+			message="error";
 			if(userFacade.getUserById(idu)!=null){
 				userFacade.deleteUser(idu);
-				List<User> lu = userFacade.users();
-				
-				//String json = new Gson().toJson(lu);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("lu", lu);
-				request.getRequestDispatcher("users.html").forward(request, response);
+				error=false;
+				message="delete";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "listu":
 			List<User> lu = userFacade.users();
-			
-			//String json = new Gson().toJson(lu);
-            //response.setContentType("application/json");
-            //response.getWriter().write(json);
-			
-			request.setAttribute("lu", lu);
-			request.getRequestDispatcher("users.html").forward(request, response);
+			json = new Gson().toJson(lu);
+            response.setContentType("application/json");
+            response.getWriter().print(json);
 			break;
-			
+
 		case "detailu":
 			idu=Integer.parseInt(request.getParameter("idu"));
-			User user=userFacade.getUserById(idu);
+			user=userFacade.getUserById(idu);
 			if(user!=null){
 				List<Collection> collections=collectionFacade.collectionsByUser(idu);
-				
-				//String jsonu = new Gson().toJson(user);
-				//String jsonc = new Gson().toJson(collections);
-	            //response.setContentType("application/json");
-	            //response.getWriter().write(jsonu);
-				//response.getWriter().write(jsonc);
-				
-				request.setAttribute("user", user);
-				request.setAttribute("collections", collections);
-				request.getRequestDispatcher("userDetail.html").forward(request, response);
+				String jsonu = new Gson().toJson(user);
+				String jsonc = new Gson().toJson(collections);
+	            response.setContentType("application/json");
+	            response.getWriter().print(jsonu);
+				response.getWriter().print(jsonc);
 			}
 			break;
 		case "imbyu":
 			idu=Integer.parseInt(request.getParameter("idu"));
 			if(userFacade.getUserById(idu)!=null){
 				List<Image> images=userFacade.imagesByUser(idu);
-				
-				//String json = new Gson().toJson(images);
-	            //response.setContentType("application/json");
-	            //response.getWriter().write(json);
-				
-				request.setAttribute("images", images);
-				request.getRequestDispatcher("imagesByUser.html").forward(request, response);
+				json = new Gson().toJson(images);
+	            response.setContentType("application/json");
+	            response.getWriter().print(json);
 			}
 			break;
 			
-			case "addc":
+			case "addcol":
 				String description=request.getParameter("description");
+				error=true;
+				message="error";
 				if(description!=null){
 					collectionFacade.addCollection(description);
-					List<Collection> lc = collectionFacade.collections();
-					
-					//String json = new Gson().toJson(lc);
-		            //response.setContentType("application/json");
-		            //response.getWriter().write(json);
-					
-					request.setAttribute("lc", lc);
-					request.getRequestDispatcher("collections.html").forward(request, response);
+					error=false;
+					message="add";
+					String jsone = new Gson().toJson(error);
+					String jsonm = new Gson().toJson(message);
+	                response.setContentType("application/json");
+	                response.getWriter().print(jsone);
+	                response.getWriter().print(jsonm);
 				}
 				break;
-			case "editc":
+			case "editcol":
 				int idc=Integer.parseInt(request.getParameter("idc"));
 				description=request.getParameter("description");
+				error=true;
+				message="error";
 				if(description!=null && collectionFacade.getCollectionById(idc)!=null){
 					collectionFacade.editCollection(idc,description);
-					List<Collection> lc = collectionFacade.collections();
-					
-					//String json = new Gson().toJson(lc);
-		            //response.setContentType("application/json");
-		            //response.getWriter().write(json);
-					
-					request.setAttribute("lc", lc);
-					request.getRequestDispatcher("collections.html").forward(request, response);
+					error=false;
+					message="edit";
+					String jsone = new Gson().toJson(error);
+					String jsonm = new Gson().toJson(message);
+	                response.setContentType("application/json");
+	                response.getWriter().print(jsone);
+	                response.getWriter().print(jsonm);
 				}
 				break;
-			case "deletec":
+			case "deletecol":
 				idc=Integer.parseInt(request.getParameter("idu"));
+				error=true;
+				message="error";
 				if(collectionFacade.getCollectionById(idc)!=null){
 					collectionFacade.deleteCollection(idc);
-					List<Collection> lc = collectionFacade.collections();
-					
-					//String json = new Gson().toJson(lc);
-		            //response.setContentType("application/json");
-		            //response.getWriter().write(json);
-					
-					request.setAttribute("lc", lc);
-					request.getRequestDispatcher("collections.html").forward(request, response);
+					error=false;
+					message="delete";
+					String jsone = new Gson().toJson(error);
+					String jsonm = new Gson().toJson(message);
+	                response.setContentType("application/json");
+	                response.getWriter().print(jsone);
+	                response.getWriter().print(jsonm);
 				}
 				break;
-			case "listc":
+			case "listcol":
 				List<Collection> lc = collectionFacade.collections();
-				
-				//String json = new Gson().toJson(lc);
-	            //response.setContentType("application/json");
-	            //response.getWriter().write(json);
-				
-				request.setAttribute("lc", lc);
-				request.getRequestDispatcher("collections.html").forward(request, response);
+				json = new Gson().toJson(lc);
+	            response.setContentType("application/json");
+	            response.getWriter().print(json);
 				break;
-			case "detailc":
+			case "detailcol":
 				idc=Integer.parseInt(request.getParameter("idc"));
 				Collection collection=collectionFacade.getCollectionById(idc);
 				if(collection!=null){
 					user=collection.getUser();
 					List<Image> images=collectionFacade.imagesByCollection(idc);
-					
-					//String jsonc = new Gson().toJson(collection);
-					//String jsonu = new Gson().toJson(user);
-					//String jsoni = new Gson().toJson(images);
-		            //response.setContentType("application/json");
-		            //response.getWriter().write(jsonc);
-					//response.getWriter().write(jsonu);
-					//response.getWriter().write(jsoni);
-					
-					request.setAttribute("collection", collection);
-					request.setAttribute("user", user);
-					request.setAttribute("images", images);
-					request.getRequestDispatcher("userDetail.html").forward(request, response);
+					String jsonc = new Gson().toJson(collection);
+					String jsonu = new Gson().toJson(user);
+					String jsoni = new Gson().toJson(images);
+		            response.setContentType("application/json");
+		            response.getWriter().print(jsonc);
+					response.getWriter().print(jsonu);
+					response.getWriter().print(jsoni);
 				}
 				break;
-			
-			
 		}
 	}
 

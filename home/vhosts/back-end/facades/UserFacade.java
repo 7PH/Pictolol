@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import entities.*;
@@ -60,9 +61,11 @@ public class UserFacade {
 		String sql = "update Image i set i.view=(select count(im.imageId) from ImageView im where im.imageId=i.id)";
 		em.createQuery(sql);
 	}
-	public User verifyUser(String email, String password){
-		TypedQuery<User> req = em.createQuery("FROM User u where u.email="+email+" and password="+password,User.class);
-		return req.getResultList().get(0);
+	public User verifyUser(String pseudo, String password){
+		Query q = em.createQuery("FROM User u where u.pseudo=:p and password=:pass");
+		q.setParameter("p", pseudo);
+		q.setParameter("pass", password);
+		return (User) q.getResultList().get(0);
 	}
 	
 }

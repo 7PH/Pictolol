@@ -34,61 +34,60 @@ public class ImageControleur extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String op=request.getParameter("op");
+		String op=request.getParameter("do");
 		switch(op){
 		
 		case "addcat":
 			String cat=request.getParameter("cat");
+			boolean error=true;
+			String message="error";
 			if(cat!=null){
 				imageFacade.addCategory(cat);
-				List<Category> lc = imageFacade.categories();
-				
-				String json = new Gson().toJson(lc);
+				error=false;
+				message="add";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
                 response.setContentType("application/json");
-                response.getWriter().write(json);
-				
-				//request.setAttribute("lc", lc);
-				//request.getRequestDispatcher("categories.html").forward(request, response);
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "editcat":
 			int idc=Integer.parseInt(request.getParameter("idc"));
 			cat=request.getParameter("cat");
+			error=true;
+			message="error";
 			if(cat!=null && imageFacade.getCategoryById(idc)!=null){
 				imageFacade.editCategory(idc,cat);
-				List<Category> lc = imageFacade.categories();
-				
-				//String json = new Gson().toJson(lc);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("lc", lc);
-				request.getRequestDispatcher("categories.html").forward(request, response);
+				error=false;
+				message="edit";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "deletecat":
 			idc=Integer.parseInt(request.getParameter("idc"));
+			error=true;
+			message="error";
 			if(imageFacade.getCategoryById(idc)!=null){
 				imageFacade.deleteCategory(idc);
-				List<Category> lc = imageFacade.categories();
-				
-				//String json = new Gson().toJson(lc);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("lc", lc);
-				request.getRequestDispatcher("categories.html").forward(request, response);
+				error=false;
+				message="delete";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "listc":
 			List<Category> lc = imageFacade.categories();
-			
-			//String json = new Gson().toJson(lc);
-            //response.setContentType("application/json");
-            //response.getWriter().write(json);
-			
-			request.setAttribute("lc", lc);
-			request.getRequestDispatcher("categories.html").forward(request, response);
+			String json = new Gson().toJson(lc);
+            response.setContentType("application/json");
+            response.getWriter().print(json);
 			break;
 			
 		case "addim":
@@ -96,52 +95,53 @@ public class ImageControleur extends HttpServlet {
 			String title=request.getParameter("title");
 			idc=Integer.parseInt(request.getParameter("idc"));
 			int idu=Integer.parseInt(request.getParameter("idu"));
+			error=true;
+			message="error";
 			if(url!=null && title!=null && imageFacade.getUserById(idu)!=null && imageFacade.getCategoryById(idc)!=null){
 				imageFacade.ajoutImage(url,title,idc,idu);
-				List<Image> li = imageFacade.images();
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				error=false;
+				message="add";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "editim":
 			url=request.getParameter("url");
 			title=request.getParameter("title");
 			int idi=Integer.parseInt(request.getParameter("idi"));
+			error=true;
+			message="error";
 			if(url!=null && title!=null && imageFacade.getImageById(idi)!=null){
 				imageFacade.editImage(idi,url,title);
-				List<Image> li = imageFacade.images();
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				error=false;
+				message="edit";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "deleteim":
 			idi=Integer.parseInt(request.getParameter("idi"));
+			error=true;
+			message="error";
 			if(imageFacade.getImageById(idi)!=null){
 				imageFacade.deleteImage(idi);
 				List<Image> li = imageFacade.images();
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				json = new Gson().toJson(li);
+                response.setContentType("application/json");
+                response.getWriter().print(json);
 			}
 			break;
 		case "listim":
 			List<Image> li = imageFacade.images();
-			request.setAttribute("li", li);
-			request.getRequestDispatcher("images.html").forward(request, response);
+			json = new Gson().toJson(li);
+            response.setContentType("application/json");
+            response.getWriter().print(json);
 			break;
 		case "detailim":
 			String ip=request.getParameter("ip");
@@ -162,28 +162,19 @@ public class ImageControleur extends HttpServlet {
 				List<Tag> tags=imageFacade.tagsByImage(idi);
 				int nbrLikes=imageFacade.nbrLikesByImage(idi);
 				List<ImageComment> comments=imageFacade.imageCommentsByImage(idi);
-				
-				//String jsoni = new Gson().toJson(image);
-				//String jsonu = new Gson().toJson(user);
-				//String jsonc = new Gson().toJson(category);
-				//String jsonco = new Gson().toJson(comments);
-				//String jsont = new Gson().toJson(tags);
-				//String jsonl = new Gson().toJson(nbrLikes);
-	            //response.setContentType("application/json");
-	            //response.getWriter().write(jsoni);
-				//response.getWriter().write(jsonu);
-				//response.getWriter().write(jsonc);
-				//response.getWriter().write(jsonco);
-				//response.getWriter().write(jsont);
-				//response.getWriter().write(jsonl);
-				
-				request.setAttribute("image", image);
-				request.setAttribute("user", user);
-				request.setAttribute("category", category);
-				request.setAttribute("comments", comments);
-				request.setAttribute("tags", tags);
-				request.setAttribute("nbrLikes", nbrLikes);
-				request.getRequestDispatcher("imageDetail.html").forward(request, response);
+				String jsoni = new Gson().toJson(image);
+				String jsonu = new Gson().toJson(user);
+				String jsonc = new Gson().toJson(category);
+				String jsonco = new Gson().toJson(comments);
+				String jsont = new Gson().toJson(tags);
+				String jsonl = new Gson().toJson(nbrLikes);
+	            response.setContentType("application/json");
+	            response.getWriter().print(jsoni);
+				response.getWriter().print(jsonu);
+				response.getWriter().print(jsonc);
+				response.getWriter().print(jsonco);
+				response.getWriter().print(jsont);
+				response.getWriter().print(jsonl);
 			}
 			break;
 			
@@ -191,42 +182,40 @@ public class ImageControleur extends HttpServlet {
 			idc=Integer.parseInt(request.getParameter("idc"));
 			if(imageFacade.getCategoryById(idc)!=null){
 				li = imageFacade.imagesByCat(idc);
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("imagesbycat.html").forward(request, response);
+				json = new Gson().toJson(li);
+                response.setContentType("application/json");
+                response.getWriter().print(json);
 			}
 			break;
 		case "deleteimfromcat":
 			idi=Integer.parseInt(request.getParameter("idi"));
+			error=true;
+			message="error";
 			if(imageFacade.getImageById(idi)!=null){
 				imageFacade.deleteImageFromCategory(idi);
-				li = imageFacade.images();
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				error=false;
+				message="delete";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "addimtocat":
 			idc=Integer.parseInt(request.getParameter("idc"));
 			idi=Integer.parseInt(request.getParameter("idi"));
+			error=true;
+			message="error";
 			if(imageFacade.getImageById(idi)!=null && imageFacade.getCategoryById(idc)!=null){
 				imageFacade.addImageToCategory(idi,idc);
-				li = imageFacade.images();
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				error=false;
+				message="delete";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 			
@@ -234,59 +223,70 @@ public class ImageControleur extends HttpServlet {
 			idi=Integer.parseInt(request.getParameter("idi"));
 			if(imageFacade.getImageById(idi)!=null){
 				List<ImageView> liv = imageViewFacade.imageViewsByImage(idi);
-				
-				//String json = new Gson().toJson(liv);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("liv", liv);
-				request.getRequestDispatcher("viewsByImage.html").forward(request, response);
+				json = new Gson().toJson(liv);
+                response.setContentType("application/json");
+                response.getWriter().print(json);
 			}
 			break;
 		case "delviewfromim":
 			idi=Integer.parseInt(request.getParameter("idi"));
+			error=true;
+			message="error";
 			if(imageFacade.getImageById(idi)!=null){
 				imageViewFacade.deleteImageViewFromImage(idi);
-				li = imageFacade.images();
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				error=false;
+				message="delete";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "delviewfromimbeforedate":
 			idi=Integer.parseInt(request.getParameter("idi"));
 			mystring = request.getParameter("date");
+			error=true;
+			message="error";
 			if(imageFacade.getImageById(idi)!=null && mystring!=null){
 				Date date=null;
 				try {
 					date = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(mystring);
 				} catch (ParseException e) {}
 				imageViewFacade.deleteImageViewFromImageBeforeDate(idi,date);
-				li = imageFacade.images();
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				error=false;
+				message="delete";
+				String jsone = new Gson().toJson(error);
+				String jsonm = new Gson().toJson(message);
+                response.setContentType("application/json");
+                response.getWriter().print(jsone);
+                response.getWriter().print(jsonm);
 			}
 			break;
 		case "search":
 			String chaine = request.getParameter("chaine");
+			error=true;
+			message="error";
 			if(chaine!=null){
 				li=imageFacade.searchByTitle(chaine);
-				
-				//String json = new Gson().toJson(li);
-                //response.setContentType("application/json");
-                //response.getWriter().write(json);
-				
-				request.setAttribute("li", li);
-				request.getRequestDispatcher("images.html").forward(request, response);
+				if(li.size()>0){
+					error=false;
+					message="search";
+					json = new Gson().toJson(li);
+					String jsone = new Gson().toJson(error);
+					String jsonm = new Gson().toJson(message);
+	                response.setContentType("application/json");
+	                response.getWriter().print(json);
+	                response.getWriter().print(jsone);
+	                response.getWriter().print(jsonm);
+				}
+				else{
+					String jsone = new Gson().toJson(error);
+					String jsonm = new Gson().toJson(message);
+	                response.setContentType("application/json");
+	                response.getWriter().print(jsone);
+	                response.getWriter().print(jsonm);
+				}
 			}
 			break;
 			
