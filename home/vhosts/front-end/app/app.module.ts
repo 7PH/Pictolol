@@ -8,13 +8,20 @@ import { CguComponent } from './cgu/cgu.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonModule, MatToolbarModule, MatIconModule, MatCardModule, MatMenuModule, MatTabsModule} from '@angular/material';
+import {MatButtonModule, MatToolbarModule, MatIconModule, MatCardModule, MatMenuModule, MatTabsModule, MatInputModule} from '@angular/material';
 import {PictissouService} from './pictissou.service';
 import { CollectionsComponent } from './collections/collections.component';
 import { NotfoundComponent } from './notfound/notfound.component';
+import { LoginComponent } from './login/login.component';
+import { AddImageComponent } from './add-image/add-image.component';
+import { RegisterComponent } from './register/register.component';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'images', component: HomeComponent },
+    { path: 'add-image', component: AddImageComponent },
     { path: 'collections', component: CollectionsComponent},
     { path: 'cgu', component: CguComponent },
     { path: '**', component: NotfoundComponent }
@@ -29,7 +36,10 @@ RouterModule.forRoot([ ]);
         HomeComponent,
         CguComponent,
         CollectionsComponent,
-        NotfoundComponent
+        NotfoundComponent,
+        LoginComponent,
+        AddImageComponent,
+        RegisterComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -44,6 +54,7 @@ RouterModule.forRoot([ ]);
         MatIconModule,
         MatCardModule,
         MatTabsModule,
+        MatInputModule,
         HttpClientModule
     ],
     providers: [PictissouService],
