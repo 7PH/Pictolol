@@ -15,10 +15,11 @@ public class TagFacade {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public void addTag(String tag){
+	public int addTag(String tag){
 		Tag t=new Tag();
 		t.setTag(tag);
 		em.persist(t);
+		return t.getId();
 	}
 	public void editTag(int id, String tag){
 		Tag t=em.find(Tag.class, id);

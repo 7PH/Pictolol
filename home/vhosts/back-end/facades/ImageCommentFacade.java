@@ -16,11 +16,12 @@ public class ImageCommentFacade {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public void addImageComment(String comment,Date date){
+	public int addImageComment(String comment,Date date){
 		ImageComment ic=new ImageComment();
 		ic.setComment(comment);
 		ic.setDate(date);
 		em.persist(ic);
+		return ic.getId();
 	}
 	public void editImageComment(int id, String comment,Date date){
 		ImageComment ic=em.find(ImageComment.class, id);

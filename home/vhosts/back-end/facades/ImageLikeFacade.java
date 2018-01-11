@@ -16,15 +16,11 @@ public class ImageLikeFacade {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public void addImageLike(Date date){
+	public int addImageLike(Date date){
 		ImageLike il=new ImageLike();
 		il.setDate(date);
 		em.persist(il);
-	}
-	public void editImageLike(int id, Date date){
-		ImageLike il=em.find(ImageLike.class, id);
-		il.setDate(date);
-		em.persist(il);
+		return il.getId();
 	}
 	public void deleteImageLike(int id){
 		ImageLike il=em.find(ImageLike.class, id);
