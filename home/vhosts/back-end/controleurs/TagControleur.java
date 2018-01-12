@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
@@ -46,11 +47,11 @@ public class TagControleur extends HttpServlet {
 				tagFacade.addTagToImage(idt, idImage);
 				error  = false;
 				String message = "addTag";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);
 			}
 		
 		case "editComment":
@@ -64,11 +65,11 @@ public class TagControleur extends HttpServlet {
 				tagFacade.editTag(idTag, textTag);
 				error  = false;
 				String message = "editTag";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);		
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);		
 			}
 		
 		case "deleteTag" :
@@ -78,11 +79,11 @@ public class TagControleur extends HttpServlet {
 				tagFacade.deleteTag(idTag);
 				error  = false;
 				String message = "deleteTag";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);		
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);	
 			}
 			
 		case "imageTags" :

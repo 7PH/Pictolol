@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
@@ -51,11 +52,11 @@ public class CommentControleur extends HttpServlet {
 				commentFacade.addImageCommentToUser(idc, idUser);
 				error  = false;
 				String message = "addComment";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);
 			}
 		
 		case "editComment":
@@ -68,11 +69,11 @@ public class CommentControleur extends HttpServlet {
 				commentFacade.editImageComment(idComment, text, date);
 				error  = false;
 				String message = "editComment";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);		
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);		
 			}
 		
 		case "deleteComment" :
@@ -82,11 +83,11 @@ public class CommentControleur extends HttpServlet {
 				commentFacade.deleteImageComment(idDelete);
 				error  = false;
 				String message = "deleteComment";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);		
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);		
 			}
 			
 		case "imageComments" :

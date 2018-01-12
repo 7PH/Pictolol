@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
@@ -50,11 +51,11 @@ public class LikeControleur extends HttpServlet {
 				likeFacade.addImageLikeToUser(idc, idUser);
 				error  = false;
 				String message = "addLike";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);
 			}
 		
 		case "deleteLike" :
@@ -64,11 +65,11 @@ public class LikeControleur extends HttpServlet {
 				likeFacade.deleteImageLike(idDelete);
 				error  = false;
 				String message = "deleteLike";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
-				response.setContentType("application/json");
-				response.getWriter().print(jsone);
-				response.getWriter().print(jsonm);		
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
+                response.setContentType("application/json");
+                response.getWriter().print(j);		
 			}
 			
 		case "imageLikes" :
