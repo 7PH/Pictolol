@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
@@ -45,11 +46,11 @@ public class ImageControleur extends HttpServlet {
 				imageFacade.addCategory(cat);
 				error=false;
 				message="add";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "editcat":
@@ -61,11 +62,11 @@ public class ImageControleur extends HttpServlet {
 				imageFacade.editCategory(idc,cat);
 				error=false;
 				message="edit";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "deletecat":
@@ -76,11 +77,11 @@ public class ImageControleur extends HttpServlet {
 				imageFacade.deleteCategory(idc);
 				error=false;
 				message="delete";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "listc":
@@ -101,11 +102,11 @@ public class ImageControleur extends HttpServlet {
 				imageFacade.ajoutImage(url,title,idc,idu);
 				error=false;
 				message="add";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "editim":
@@ -118,11 +119,11 @@ public class ImageControleur extends HttpServlet {
 				imageFacade.editImage(idi,url,title);
 				error=false;
 				message="edit";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "deleteim":
@@ -131,10 +132,13 @@ public class ImageControleur extends HttpServlet {
 			message="error";
 			if(imageFacade.getImageById(idi)!=null){
 				imageFacade.deleteImage(idi);
-				List<Image> li = imageFacade.images();
-				json = new Gson().toJson(li);
+				error=false;
+				message="delete";
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(json);
+                response.getWriter().print(j);
 			}
 			break;
 		case "listim":
@@ -162,19 +166,15 @@ public class ImageControleur extends HttpServlet {
 				List<Tag> tags=imageFacade.tagsByImage(idi);
 				int nbrLikes=imageFacade.nbrLikesByImage(idi);
 				List<ImageComment> comments=imageFacade.imageCommentsByImage(idi);
-				String jsoni = new Gson().toJson(image);
-				String jsonu = new Gson().toJson(user);
-				String jsonc = new Gson().toJson(category);
-				String jsonco = new Gson().toJson(comments);
-				String jsont = new Gson().toJson(tags);
-				String jsonl = new Gson().toJson(nbrLikes);
-	            response.setContentType("application/json");
-	            response.getWriter().print(jsoni);
-				response.getWriter().print(jsonu);
-				response.getWriter().print(jsonc);
-				response.getWriter().print(jsonco);
-				response.getWriter().print(jsont);
-				response.getWriter().print(jsonl);
+				JsonObject j=new JsonObject();
+				j.addProperty("image", image.toString());
+				j.addProperty("user", user.toString());
+				j.addProperty("category", category.toString());
+				j.addProperty("tags", tags.toString());
+				j.addProperty("comments", comments.toString());
+				j.addProperty("nbrLikes", nbrLikes);
+                response.setContentType("application/json");
+                response.getWriter().print(j);
 			}
 			break;
 			
@@ -195,11 +195,11 @@ public class ImageControleur extends HttpServlet {
 				imageFacade.deleteImageFromCategory(idi);
 				error=false;
 				message="delete";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "addimtocat":
@@ -211,11 +211,11 @@ public class ImageControleur extends HttpServlet {
 				imageFacade.addImageToCategory(idi,idc);
 				error=false;
 				message="delete";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 			
@@ -236,11 +236,11 @@ public class ImageControleur extends HttpServlet {
 				imageViewFacade.deleteImageViewFromImage(idi);
 				error=false;
 				message="delete";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "delviewfromimbeforedate":
@@ -256,11 +256,11 @@ public class ImageControleur extends HttpServlet {
 				imageViewFacade.deleteImageViewFromImageBeforeDate(idi,date);
 				error=false;
 				message="delete";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "search":
@@ -272,20 +272,19 @@ public class ImageControleur extends HttpServlet {
 				if(li.size()>0){
 					error=false;
 					message="search";
-					json = new Gson().toJson(li);
-					String jsone = new Gson().toJson(error);
-					String jsonm = new Gson().toJson(message);
+					JsonObject j=new JsonObject();
+					j.addProperty("images", li.toString());
+					j.addProperty("error", error);
+					j.addProperty("message", message);
 	                response.setContentType("application/json");
-	                response.getWriter().print(json);
-	                response.getWriter().print(jsone);
-	                response.getWriter().print(jsonm);
+	                response.getWriter().print(j);
 				}
 				else{
-					String jsone = new Gson().toJson(error);
-					String jsonm = new Gson().toJson(message);
+					JsonObject j=new JsonObject();
+					j.addProperty("error", error);
+					j.addProperty("message", message);
 	                response.setContentType("application/json");
-	                response.getWriter().print(jsone);
-	                response.getWriter().print(jsonm);
+	                response.getWriter().print(j);
 				}
 			}
 			break;

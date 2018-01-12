@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
@@ -59,11 +60,11 @@ public class UserControleur extends HttpServlet {
 					error=false;
 					message="signin";
 				}
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				JsonObject json=new JsonObject();
+				json.addProperty("error", error);
+				json.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(json);
 			}
 			break;
 		case "fetch":
@@ -86,9 +87,10 @@ public class UserControleur extends HttpServlet {
 			message="logout";
 			session = request.getSession();
 	        session.invalidate();
-	        json = new Gson().toJson(message);
+	        JsonObject j=new JsonObject();
+			j.addProperty("message", message);
             response.setContentType("application/json");
-            response.getWriter().print(json);
+            response.getWriter().print(j);
 			break;
 		case "register":
 			pseudo=request.getParameter("pseudo");
@@ -108,11 +110,11 @@ public class UserControleur extends HttpServlet {
 				userFacade.addUser(pseudo,email,encoded);
 				error=false;
 				message="register";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "editu":
@@ -134,11 +136,11 @@ public class UserControleur extends HttpServlet {
 				userFacade.editUser(idu,pseudo,email,encoded);
 				error=false;
 				message="edit";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "deleteu":
@@ -149,11 +151,11 @@ public class UserControleur extends HttpServlet {
 				userFacade.deleteUser(idu);
 				error=false;
 				message="delete";
-				String jsone = new Gson().toJson(error);
-				String jsonm = new Gson().toJson(message);
+				j=new JsonObject();
+				j.addProperty("error", error);
+				j.addProperty("message", message);
                 response.setContentType("application/json");
-                response.getWriter().print(jsone);
-                response.getWriter().print(jsonm);
+                response.getWriter().print(j);
 			}
 			break;
 		case "listu":
@@ -168,11 +170,11 @@ public class UserControleur extends HttpServlet {
 			user=userFacade.getUserById(idu);
 			if(user!=null){
 				List<Collection> collections=collectionFacade.collectionsByUser(idu);
-				String jsonu = new Gson().toJson(user);
-				String jsonc = new Gson().toJson(collections);
-	            response.setContentType("application/json");
-	            response.getWriter().print(jsonu);
-				response.getWriter().print(jsonc);
+				j=new JsonObject();
+				j.addProperty("user", user.toString());
+				j.addProperty("collections", collections.toString());
+                response.setContentType("application/json");
+                response.getWriter().print(j);
 			}
 			break;
 		case "imbyu":
@@ -193,11 +195,11 @@ public class UserControleur extends HttpServlet {
 					collectionFacade.addCollection(description);
 					error=false;
 					message="add";
-					String jsone = new Gson().toJson(error);
-					String jsonm = new Gson().toJson(message);
+					j=new JsonObject();
+					j.addProperty("error", error);
+					j.addProperty("message", message);
 	                response.setContentType("application/json");
-	                response.getWriter().print(jsone);
-	                response.getWriter().print(jsonm);
+	                response.getWriter().print(j);
 				}
 				break;
 			case "editcol":
@@ -209,11 +211,11 @@ public class UserControleur extends HttpServlet {
 					collectionFacade.editCollection(idc,description);
 					error=false;
 					message="edit";
-					String jsone = new Gson().toJson(error);
-					String jsonm = new Gson().toJson(message);
+					j=new JsonObject();
+					j.addProperty("error", error);
+					j.addProperty("message", message);
 	                response.setContentType("application/json");
-	                response.getWriter().print(jsone);
-	                response.getWriter().print(jsonm);
+	                response.getWriter().print(j);
 				}
 				break;
 			case "deletecol":
@@ -224,11 +226,11 @@ public class UserControleur extends HttpServlet {
 					collectionFacade.deleteCollection(idc);
 					error=false;
 					message="delete";
-					String jsone = new Gson().toJson(error);
-					String jsonm = new Gson().toJson(message);
+					j=new JsonObject();
+					j.addProperty("error", error);
+					j.addProperty("message", message);
 	                response.setContentType("application/json");
-	                response.getWriter().print(jsone);
-	                response.getWriter().print(jsonm);
+	                response.getWriter().print(j);
 				}
 				break;
 			case "listcol":
@@ -243,13 +245,12 @@ public class UserControleur extends HttpServlet {
 				if(collection!=null){
 					user=collection.getUser();
 					List<Image> images=collectionFacade.imagesByCollection(idc);
-					String jsonc = new Gson().toJson(collection);
-					String jsonu = new Gson().toJson(user);
-					String jsoni = new Gson().toJson(images);
-		            response.setContentType("application/json");
-		            response.getWriter().print(jsonc);
-					response.getWriter().print(jsonu);
-					response.getWriter().print(jsoni);
+					j=new JsonObject();
+					j.addProperty("collection", collection.toString());
+					j.addProperty("user", user.toString());
+					j.addProperty("images", images.toString());
+	                response.setContentType("application/json");
+	                response.getWriter().print(j);
 				}
 				break;
 		}

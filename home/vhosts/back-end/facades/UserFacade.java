@@ -62,10 +62,12 @@ public class UserFacade {
 		em.createQuery(sql);
 	}
 	public User verifyUser(String pseudo, String password){
-		Query q = em.createQuery("FROM User u where u.pseudo=:p and password=:pass");
-		q.setParameter("p", pseudo);
-		q.setParameter("pass", password);
-		return (User) q.getResultList().get(0);
+		Query req = em.createQuery("SELECT u FROM User u WHERE u.pseudo = ?1 AND u.password = ?2");
+        req.setParameter(1, pseudo).setParameter(2, password);
+        @SuppressWarnings("unchecked")
+		List<User> list=req.getResultList();
+		if(list.size()>0)return list.get(0);
+		return null;
 	}
 	
 }
