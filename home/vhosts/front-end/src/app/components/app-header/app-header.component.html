@@ -1,15 +1,31 @@
+
 <header class="app-header navbar">
-  <button class="navbar-toggler d-lg-none" type="button" appMobileSidebarToggler>
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand" href="#"></a>
-  <!--<button class="navbar-toggler d-md-down-none" type="button" appSidebarToggler>
-    <span class="navbar-toggler-icon"></span>
-  </button>-->
-  <ul class="nav navbar-nav d-md-down-none">
-    <li class="nav-item px-3">
-      <a class="nav-link" href="#">Accueil</a>
-    </li>
-  </ul>
-  <ul class="nav navbar-nav ml-auto"></ul>
+    <button class="navbar-toggler d-lg-none" type="button" appMobileSidebarToggler>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler d-md-down-none" type="button" appSidebarToggler>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="nav navbar-nav d-md-down-none">
+        <li class="nav-item px-3">
+            <a class="nav-link" href="#">Images</a>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown" dropdown placement="bottom right">
+            <a *ngIf="! pict.isLogged()" class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
+                {{ pict.user.pseudo }} <img src="assets/img/avatars/0.jpg" class="img-avatar" alt="Guest"/>
+            </a>
+            <a *ngIf="pict.isLogged()" class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
+                {{ pict.user.pseudo }} <img src="assets/img/avatars/3.jpg" class="img-avatar" alt="admin@bootstrapmaster.com"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+                <div class="dropdown-header text-center"><strong>Account</strong></div>
+                <a *ngIf="! pict.isLogged()" class="dropdown-item" href="#/register"><i class="fa fa-lock"></i> S'inscrire</a>
+                <a *ngIf="! pict.isLogged()" class="dropdown-item" href="#/login"><i class="fa fa-lock"></i> Se connecter</a>
+                <a *ngIf="pict.isLogged()" class="dropdown-item" (click)="pict.logout()" href="javascript:"><i class="fa fa-lock"></i> Se déconnecter</a>
+            </div>
+        </li>
+    </ul>
 </header>

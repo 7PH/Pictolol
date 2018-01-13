@@ -3,14 +3,16 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AddImageComponent } from './add-image';
-import { DashboardRoutingModule } from './add-image-routing.module';
+import { AddImageRoutingModule } from './add-image-routing.module';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
-  imports: [
-    DashboardRoutingModule,
-    ChartsModule,
-    BsDropdownModule
-  ],
-  declarations: [ AddImageComponent ]
+    imports: [
+        AddImageRoutingModule,
+        ChartsModule,
+        BsDropdownModule,
+        FormsModule
+    ],
+    declarations: [ AddImageComponent ]
 })
 export class AddImageModule { }

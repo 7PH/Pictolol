@@ -1,0 +1,10 @@
+.pictissou-image {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin: 20px;
+}
+.pictissou-image img {
+    max-width: 100%;
+    max-height: 100%;
+}

@@ -1,0 +1,32 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Se connecter</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="pseudo">Pseudo</label>
+                                <input type="text" class="form-control" id="pseudo" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="password">Mot de passe</label>
+                                <input type="password" class="form-control" id="password" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-primary" type="submit" (click)="login()"><i class="fa fa-dot-circle-o"></i> Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,7 +18,6 @@ const APP_CONTAINERS = [
 
 // Import components
 import {
-  AppAsideComponent,
   AppBreadcrumbsComponent,
   AppFooterComponent,
   AppHeaderComponent,
@@ -31,7 +30,6 @@ import {
 } from './components';
 
 const APP_COMPONENTS = [
-  AppAsideComponent,
   AppBreadcrumbsComponent,
   AppFooterComponent,
   AppHeaderComponent,
@@ -66,6 +64,8 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import {PictissouService} from './services/PictissouService';
+import {ToasterService} from 'angular2-toaster';
 
 @NgModule({
   imports: [
@@ -75,7 +75,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
     ChartsModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
-    TabsModule.forRoot(),
+    TabsModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -85,8 +85,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
   ],
   providers: [{
     provide: LocationStrategy,
-    useClass: HashLocationStrategy
-  }],
+    useClass: HashLocationStrategy,
+  }, PictissouService, ToasterService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

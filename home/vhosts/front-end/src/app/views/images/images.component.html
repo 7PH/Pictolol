@@ -1,0 +1,13 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="row text-center">
+                    <div *ngFor="let image of images" class="col-6 col-sm-4 col-md-3 col-lg-2 pictissou-image">
+                        <a [routerLink]="['/image', image.id]"><img [src]="image.url"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

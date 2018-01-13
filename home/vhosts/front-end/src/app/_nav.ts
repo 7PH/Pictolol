@@ -1,8 +1,8 @@
 export const navigation = [
   {
     name: 'Accueil',
-    url: '/dashboard',
-    icon: 'icon-speedometer'
+    url: '/images',
+    icon: 'icon-home'
   },
   {
     title: true,
@@ -11,11 +11,11 @@ export const navigation = [
   {
     name: 'Ajouter une image',
     url: '/add-image',
-    icon: 'icon-speedometer'
+    icon: 'icon-plus'
   },
   {
     name: 'Voir les collections',
     url: '/collections',
-    icon: 'icon-speedometer'
+    icon: 'icon-folder-alt'
   },
 ];

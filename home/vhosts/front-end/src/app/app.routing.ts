@@ -8,28 +8,40 @@ import {
 } from './containers';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full',
-  },
-  {
-    path: '',
-    component: FullLayoutComponent,
-    data: {
-      title: 'Home'
+    {
+        path: '',
+        redirectTo: 'images',
+        pathMatch: 'full',
     },
-    children: [
-      {
-        path: 'dashboard',
-        loadChildren: './views/dashboard/dashboard.module#DashboardModule'
-      },
-      {
-        path: 'add-image',
-        loadChildren: './views/add-image/add-image.module#AddImageModule'
-      }
-    ]
-  }
+    {
+        path: '',
+        component: FullLayoutComponent,
+        data: {
+            title: 'Accueil'
+        },
+        children: [
+            {
+                path: 'images',
+                loadChildren: './views/images/images.module#ImagesModule'
+            },
+            {
+                path: 'add-image',
+                loadChildren: './views/add-image/add-image.module#AddImageModule'
+            },
+            {
+                path: 'login',
+                loadChildren: './views/login/login.module#LoginModule'
+            },
+            {
+                path: 'register',
+                loadChildren: './views/register/register.module#RegisterModule'
+            },
+            {
+                path: 'image/:id',
+                loadChildren: './views/image/image.module#ImageModule'
+            }
+        ]
+    }
 ];
 
 @NgModule({
