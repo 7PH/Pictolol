@@ -10,12 +10,21 @@ import {Router} from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
 
+    public pseudo: string;
+    public password: string;
+    public email: string;
+
     constructor (private root: Router, private pict: PictissouService, private toast: ToasterService) { }
     ngOnInit(): void { }
 
     register() {
-        this.pict.register();
-        // this.toast.pop('success', 'Vous êtes connecté, ' + this.pict.user.pseudo);
-        this.root.navigate(['login']);
+        this.pict.register(this.pseudo, this.password, this.email)
+            .subscribe(response => {
+                if (response.error) {
+                    this.toast.pop('error', response.message);
+                } else {
+                    this.root.navigate(['login']);
+                }
+            });
     }
 }

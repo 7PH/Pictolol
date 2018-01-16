@@ -10,12 +10,21 @@ import {Router} from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+    public pseudo: string;
+    public password: string;
+
     constructor (private root: Router, private pict: PictissouService, private toast: ToasterService) { }
     ngOnInit(): void { }
 
     login() {
-        this.pict.login();
-        // this.toast.pop('success', 'Vous êtes connecté, ' + this.pict.user.pseudo);
-        this.root.navigateByUrl('#');
+        this.pict.login(this.pseudo, this.password)
+            .subscribe(response => {
+                if (response.error) {
+                    this.toast.pop('error', response.message);
+                } else {
+                    this.pict.load();
+                    this.root.navigateByUrl('#');
+                }
+            });
     }
 }

@@ -5,6 +5,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { RegisterComponent } from './register';
 import { RegisterRoutingModule } from './register-routing.module';
 import {ToasterModule} from 'angular2-toaster';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
     imports: [
@@ -12,6 +13,7 @@ import {ToasterModule} from 'angular2-toaster';
         ChartsModule,
         BsDropdownModule,
         ToasterModule,
+        FormsModule
     ],
     declarations: [ RegisterComponent ]
 })

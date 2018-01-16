@@ -66,6 +66,9 @@ import { ModalModule } from 'ngx-bootstrap';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import {PictissouService} from './services/PictissouService';
 import {ToasterService} from 'angular2-toaster';
+import {APIHelper} from './services/api/APIHelper';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -75,7 +78,9 @@ import {ToasterService} from 'angular2-toaster';
     ChartsModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
-    TabsModule.forRoot()
+    TabsModule.forRoot(),
+    HttpClientModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,
@@ -86,7 +91,7 @@ import {ToasterService} from 'angular2-toaster';
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy,
-  }, PictissouService, ToasterService],
+  }, PictissouService, APIHelper, ToasterService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -6,7 +6,7 @@ import {PictissouService} from '../../services/PictissouService';
     templateUrl: 'add-image.component.html'
 })
 export class AddImageComponent implements OnInit {
-    public url: String;
+    public url: string;
 
     constructor (private router: Router, private pict: PictissouService) { }
     ngOnInit(): void { }
