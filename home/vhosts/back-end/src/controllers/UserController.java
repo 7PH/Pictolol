@@ -53,7 +53,10 @@ public class UserController extends HttpServlet {
         }
 
         /* Ensure csrf token is there :) */
-        APIHelper.ensureCsrf(request, response, session);
+        if (! APIHelper.checkCsrf(request, response, session)) {
+            APIHelper.exit(response, true, "Le token CSRF est invalide");
+            return;
+        }
 
         /* Basic routing */
         switch (op) {

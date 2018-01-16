@@ -48,7 +48,7 @@ public class APIHelper {
     }
 
     private static String generateCsrfToken() {
-        return Double.toString(Math.floor(100000 * Math.random()));
+        return System.currentTimeMillis() + "-" + Math.random();
     }
 
     public static String getCsrfToken(HttpSession session) {
@@ -65,9 +65,7 @@ public class APIHelper {
         return values;
     }
 
-    public static void ensureCsrf(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        Map<String, String> data = ensureParametersExists(request, response, CSRF_TOKEN_NAME);
-        if (! data.equals(getCsrfToken(session)))
-            exit(response, true, "Le token CSRF est invalide");
+    public static boolean checkCsrf(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+        return request.getParameter(CSRF_TOKEN_NAME) != null && request.getParameter(CSRF_TOKEN_NAME).equals(getCsrfToken(session));
     }
 }
