@@ -24,8 +24,8 @@ public class ImageViewFacade {
 		idi.setImageId(imageId);
 		idi.setIp(ip);
 		iv.setId(idi);
-		Image i=em.find(Image.class, imageId);
-		i.getImageViews().add(iv);
+		//Image i=em.find(Image.class, imageId);
+		//iv.setImage(i);
 		em.persist(iv);
 	}
 	public void editImageView(int id, String ip, Date date){
@@ -59,14 +59,16 @@ public class ImageViewFacade {
 		iv.setImage(null);
 	}
 	public void deleteImageViewFromImageBeforeDate(int idImage, Date date){
-		String sql = "delete FROM ImageView iv where iv.imageId="+idImage+" and iv.date<="+date;
+		String sql = "delete FROM ImageView iv where iv.id.imageId="+idImage+" and iv.id.date<="+date;
 		em.createQuery(sql);
 	}
 	public int isView(String ip,int idImage){
-		String sql = "select count(iv.ip) FROM ImageView iv where iv.imageId="+idImage+" and ip="+ip;
-		Query q = em.createQuery(sql);
-		int count = (int) q.getSingleResult();
-		return count;
+		Query req = em.createQuery("select count(iv.id.ip) FROM ImageView iv where iv.id.imageId="+idImage+" and iv.id.ip="+ip);
+		@SuppressWarnings("unchecked")
+		List<Long> list=req.getResultList();
+		if(list.size()>0)return (new Long((Long)list.get(0))).intValue();
+		return 0;
 	}
 	
 }
+

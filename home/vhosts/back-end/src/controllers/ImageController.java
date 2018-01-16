@@ -21,7 +21,7 @@ import entities.*;
 import facades.*;
 import utils.APIHelper;
 
-@WebServlet("/ImageControleur")
+@WebServlet("/Images")
 public class ImageControleur extends Controller {
 	private static final long serialVersionUID = 1L;
 	
@@ -72,7 +72,7 @@ public class ImageControleur extends Controller {
             data = APIHelper.ensureParametersExists(request, response, "idc", "description");
             Category category = imageFacade.getCategoryById(Integer.parseInt(data.get("idc")));
             if (category == null) {
-                APIHelper.errorExit(response, "Cette categorie n'existe pas");
+                APIHelper.errorExit(response, "Cette catégorie n'existe pas");
             }else {
             	imageFacade.editCategory(Integer.parseInt(data.get("idc")),data.get("description"));
             	APIHelper.exit(response, false, "Modification bien effectuée");
@@ -146,31 +146,31 @@ public class ImageControleur extends Controller {
         
         /* Specific image info */
         case "detailimage":
-            data = APIHelper.ensureParametersExists(request, response, "ip","idi","date");
-            image=imageFacade.getImageById(Integer.parseInt(data.get("idi")));
+            data = APIHelper.ensureParametersExists(request, response, "id","ip");
+            int idi=Integer.parseInt(data.get("id"));
+            image=imageFacade.getImageById(idi);
             if (image == null) {
                 APIHelper.errorExit(response, "Unable to find this image");
             } else {
-            	int isView=imageViewFacade.isView(data.get("ip"), Integer.parseInt(data.get("idi")));
+            	int isView=imageViewFacade.isView(data.get("ip"),idi);
 				if(isView==0){
-					Date date=null;
-					try {
-						date = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(data.get("date"));
-					} catch (ParseException e) {}
-					imageViewFacade.addImageView(data.get("ip"),date,Integer.parseInt(data.get("idi")));
+					Date date = new Date();
+					imageViewFacade.addImageView(data.get("ip"),date,idi);
+					imageFacade.viewUpdateById(idi);
+					image=imageFacade.getImageById(idi);
 				}
 				user=image.getUser();
 				category=image.getCategory();
-				List<Tag> tags=imageFacade.tagsByImage(Integer.parseInt(data.get("idi")));
-				int nbrLikes=imageFacade.nbrLikesByImage(Integer.parseInt(data.get("idi")));
-				List<ImageComment> comments=imageFacade.imageCommentsByImage(Integer.parseInt(data.get("idi")));
+				List<Tag> tags=imageFacade.tagsByImage(idi);
+				int nbrLikes=imageFacade.nbrLikesByImage(idi);
+				List<ImageComment> comments=imageFacade.imageCommentsByImage(idi);
                 json.add("image", gson.toJsonTree(image));
                 json.add("user", gson.toJsonTree(user));
                 json.add("category", gson.toJsonTree(category));
                 json.add("tags", gson.toJsonTree(tags));
                 json.add("comments", gson.toJsonTree(comments));
                 json.add("nbrLikes", gson.toJsonTree(nbrLikes));
-                APIHelper.exit(response, false, "ok", json);
+                APIHelper.exit(response, false, "ok",json);
             }
             break;
             

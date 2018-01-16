@@ -27,7 +27,7 @@ public class Image {
 	@ManyToOne
 	private User user;
 	
-	@ManyToMany
+	@ManyToMany(mappedBy="images",fetch=FetchType.EAGER)
 	private List<Tag> tags;
 	
 	@ManyToMany(mappedBy="images",fetch=FetchType.EAGER)
@@ -135,4 +135,5 @@ public class Image {
 	}
 
 }
+
 

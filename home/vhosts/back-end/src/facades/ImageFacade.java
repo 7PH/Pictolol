@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import entities.*;
@@ -57,12 +58,20 @@ public class ImageFacade {
 		em.remove(i);
 	}
 	public void viewUpdate(){
-		String sql = "update Image i set i.view=(select count(im.imageId) from ImageView im where im.imageId=i.id)";
-		em.createQuery(sql);
+		TypedQuery<Image> req = em.createQuery("FROM Image i",Image.class);
+		List<Image> list=req.getResultList();
+		for(Image i:list){
+			Query query = em.createQuery("select count(im.id.imageId) from ImageView im where im.id.imageId="+i.getId());
+			int cpt=new Long((Long)query.getResultList().get(0)).intValue();
+			Image image=em.find(Image.class, i.getId());
+			image.setView(cpt);
+		}
 	}
 	public void viewUpdateById(int idImage){
-		String sql = "update Image i set i.view=(select count(im.imageId) from ImageView im where im.imageId"+idImage+")";
-		em.createQuery(sql);
+		Query req = em.createQuery("select count(im.id.imageId) from ImageView im where im.id.imageId="+idImage);
+		int cpt=new Long((Long)req.getResultList().get(0)).intValue();
+		Image image=em.find(Image.class, idImage);
+		image.setView(cpt);
 	}
 	public List<Image> images(){
 		viewUpdate();
@@ -70,7 +79,6 @@ public class ImageFacade {
 		return req.getResultList();
 	}
 	public Image getImageById(int idImage){
-		viewUpdateById(idImage);
 		return em.find(Image.class, idImage);
 	}
 	
@@ -120,3 +128,4 @@ public class ImageFacade {
 	}
 	
 }
+

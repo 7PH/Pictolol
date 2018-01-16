@@ -3,7 +3,6 @@ package entities;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +16,7 @@ public class Tag {
 	private int id;
 	private String tag;
 	
-	@ManyToMany(mappedBy="tags",fetch=FetchType.EAGER)
+	@ManyToMany
 	private List<Image> images;
 
 	public Tag() {
@@ -49,3 +48,4 @@ public class Tag {
 	}
 
 }
+
