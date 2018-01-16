@@ -11,6 +11,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class Controller extends HttpServlet {
+	
+	private static final long serialVersionUID = 1L;
 
     public static final boolean PRODUCTION = false;
 
@@ -43,3 +45,4 @@ public class Controller extends HttpServlet {
         doGet(request, response);
     }
 }
+

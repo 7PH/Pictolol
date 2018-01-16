@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
@@ -47,7 +46,6 @@ public class UserController extends Controller {
         String op = request.getParameter("do");
 
         /* Data used in the controller */
-        String message = "";
         JsonObject json = new JsonObject();
         Map<String, String> data;
         User user;
@@ -55,20 +53,7 @@ public class UserController extends Controller {
         /* Basic routing */
         switch (op) {
 
-            /* Fetch info about current user */
-            case "fetch":
-                if (session.getAttribute("idUser") != "0") {
-                    int idUser = (int) session.getAttribute("idUser");
-                    user = userFacade.getUserById(idUser);
-                } else {
-                    user = new User();
-                    user.setId(0);
-                    user.setPseudo("*Guest");
-                }
-                APIHelper.exit(response, false, "ok", user);
-                break;
-
-
+        
             /* Log out */
             case "logout":
                 session.invalidate();
@@ -83,6 +68,7 @@ public class UserController extends Controller {
                 APIHelper.exit(response, false, "Vous avez bien créé votre compte");
                 break;
 
+                
             /* Login */
             case "login":
                 data = APIHelper.ensureParametersExists(request, response, "pseudo", "password");
