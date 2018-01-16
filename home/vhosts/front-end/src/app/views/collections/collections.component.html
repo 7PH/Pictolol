@@ -1,0 +1,13 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="row text-center">
+                    <div *ngFor="let collection of collections" class="col-6 col-sm-4 col-md-3 col-lg-2 pictissou-collection">
+                        <a [routerLink]="['/collection', collection.id]">Collection: {{ collection.description }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
