@@ -1,13 +1,12 @@
 package entities;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity
 public class User {
@@ -17,7 +16,7 @@ public class User {
 	private int id;
 	private String pseudo;
 	private String email;
-	private String password;
+	private transient String password;
 	private int right;
 	
 	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
@@ -32,9 +31,20 @@ public class User {
 	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
 	List<ImageLike> imageLikes;
 
-	public User() {
-		super();
-	}
+    public static String hashPassword(String password) {
+        password = "@{-" + password + "-}@";
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {}
+        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        String encoded = Base64.getEncoder().encodeToString(hash);
+        return encoded.substring(0, encoded.lastIndexOf('='));
+    }
+
+    public User() {
+        super();
+    }
 
 	public int getId() {
 		return id;
@@ -111,5 +121,4 @@ public class User {
 	public void setImageViews(List<ImageLike> imageLikes) {
 		this.imageLikes = imageLikes;
 	}
-	
 }
