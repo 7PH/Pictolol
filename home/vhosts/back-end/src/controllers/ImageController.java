@@ -13,29 +13,44 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
+import utils.APIHelper;
 
 @WebServlet("/Images")
-public class ImageController extends HttpServlet {
+public class ImageController extends Controller {
 	private static final long serialVersionUID = 1L;
 
 	@EJB
+	private
 	ImageFacade imageFacade;
 
 	@EJB
+	private
 	ImageViewFacade imageViewFacade;
 
-	public ImageController() {
-		super();
-	}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        /* init session, etc.. */
+        super.doGet(request, response);
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String op = request.getParameter("do");
+        /* Get session instance */
+        HttpSession session = request.getSession();
+
+        /* Ensure csrf token is there :) */
+        if (! APIHelper.checkCsrf(request, response, session)) {
+            APIHelper.exit(response, true, "Le token CSRF est invalide");
+            return;
+        }
+
+        /* Loading route parameter */
+        String op = request.getParameter("do");
+
+
 		switch (op) {
 
 			case "addcat":
@@ -290,9 +305,4 @@ public class ImageController extends HttpServlet {
 
 		}
 	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
-
 }

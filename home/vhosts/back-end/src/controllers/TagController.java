@@ -8,12 +8,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
+import utils.APIHelper;
+
 import java.util.Date;
 import java.util.List;
 /**
@@ -34,7 +37,22 @@ public class TagController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/* init session, etc.. */
+		super.doGet(request, response);
+
+		/* Get session instance */
+		HttpSession session = request.getSession();
+
+		/* Ensure csrf token is there :) */
+		if (! APIHelper.checkCsrf(request, response, session)) {
+			APIHelper.exit(response, true, "Le token CSRF est invalide");
+			return;
+		}
+
+		/* Loading route parameter */
 		String op = request.getParameter("do");
+
+
 		switch (op) {
 
 			case "addTag":

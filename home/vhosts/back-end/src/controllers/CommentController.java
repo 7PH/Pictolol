@@ -15,33 +15,46 @@ import com.google.gson.JsonObject;
 
 import entities.*;
 import facades.*;
+import utils.APIHelper;
+
 import java.util.Date;
 import java.util.List;
 /**
  * Servlet implementation class CommentController
  */
 @WebServlet("/Comments")
-public class CommentController extends HttpServlet {
+public class CommentController extends Controller {
 	private static final long serialVersionUID = 1L;
 
 	@EJB
+	private
 	ImageCommentFacade commentFacade;
-
-	public CommentController() {
-		super();
-	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String op = request.getParameter("do");
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        /* init session, etc.. */
+        super.doGet(request, response);
+
+        /* Get session instance */
+        HttpSession session = request.getSession();
+
+        /* Ensure csrf token is there :) */
+        if (! APIHelper.checkCsrf(request, response, session)) {
+            APIHelper.exit(response, true, "Le token CSRF est invalide");
+            return;
+        }
+
+        /* Loading route parameter */
+        String op = request.getParameter("do");
+
+
 		switch (op) {
 
 			case "addComment":
 				int idImage = Integer.parseInt(request.getParameter("idImage"));
 				String textComment = request.getParameter("text");
-				HttpSession session = request.getSession();
 				boolean error = true;
 				if (session.getAttribute("idUser") != null && idImage > 0 && textComment != null) {
 					int idUser = (int) session.getAttribute("idUser");

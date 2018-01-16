@@ -17,7 +17,7 @@ import facades.*;
 import utils.APIHelper;
 
 @WebServlet("/Users")
-public class UserController extends HttpServlet {
+public class UserController extends Controller {
     private static final long serialVersionUID = 1L;
 
     @EJB
@@ -31,10 +31,17 @@ public class UserController extends HttpServlet {
     private Gson gson = new Gson();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        /* init session, etc.. */
+        super.doGet(request, response);
 
-        /* Session initialisation */
+        /* Get session instance */
         HttpSession session = request.getSession();
-        APIHelper.initSession(session);
+
+        /* Ensure csrf token is there :) */
+        if (! APIHelper.checkCsrf(request, response, session)) {
+            APIHelper.exit(response, true, "Le token CSRF est invalide");
+            return;
+        }
 
         /* Loading route parameter */
         String op = request.getParameter("do");
@@ -44,19 +51,6 @@ public class UserController extends HttpServlet {
         JsonObject json = new JsonObject();
         Map<String, String> data;
         User user;
-
-        /* Only action allowed without csrf token */
-        if (op.equals("load")) {
-            json.addProperty("csrf_name", APIHelper.CSRF_TOKEN_NAME);
-            json.addProperty("csrf_value", APIHelper.getCsrfToken(session));
-            APIHelper.exit(response, true, "ok", json);
-        }
-
-        /* Ensure csrf token is there :) */
-        if (! APIHelper.checkCsrf(request, response, session)) {
-            APIHelper.exit(response, true, "Le token CSRF est invalide");
-            return;
-        }
 
         /* Basic routing */
         switch (op) {
@@ -241,11 +235,6 @@ public class UserController extends HttpServlet {
                 APIHelper.exit(response, true, "Route not found!");
                 break;
         }
-    }
-
-    /* Redirects post request to get request */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
     }
 
 }
