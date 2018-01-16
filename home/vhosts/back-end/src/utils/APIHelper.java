@@ -65,4 +65,9 @@ public class APIHelper {
         return values;
     }
 
+    public static void ensureCsrf(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+        Map<String, String> data = ensureParametersExists(request, response, CSRF_TOKEN_NAME);
+        if (! data.equals(getCsrfToken(session)))
+            exit(response, true, "Le token CSRF est invalide");
+    }
 }

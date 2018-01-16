@@ -52,6 +52,8 @@ public class UserController extends HttpServlet {
             APIHelper.exit(response, true, "ok", json);
         }
 
+        /* Ensure csrf token is there :) */
+        APIHelper.ensureCsrf(request, response, session);
 
         /* Basic routing */
         switch (op) {
