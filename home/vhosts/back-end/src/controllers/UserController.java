@@ -38,7 +38,7 @@ public class UserController extends Controller {
         HttpSession session = request.getSession();
 
         /* Ensure csrf token is there :) */
-        if (! APIHelper.checkCsrf(request, response, session)) {
+        if (! APIHelper.checkCsrf(request, response, session) && request.getAttribute("gaveCsrfToken") == null) {
             APIHelper.exit(response, true, "Le token CSRF est invalide");
             return;
         }
@@ -97,6 +97,7 @@ public class UserController extends Controller {
                     APIHelper.errorExit(response, "Données incorrectes");
                 else {
                     session.setAttribute("idUser", user.getId());
+                    session.setAttribute("pseudoUser", user.getPseudo());
                     APIHelper.exit(response, false, "ok", user);
                 }
                 break;
@@ -232,7 +233,9 @@ public class UserController extends Controller {
 
             /* Wrong API Call */
             default:
-                APIHelper.exit(response, true, "Route not found!");
+                if (request.getAttribute("gaveCsrfToken") == null) {
+                    APIHelper.exit(response, true, "Route not found!");
+                }
                 break;
         }
     }

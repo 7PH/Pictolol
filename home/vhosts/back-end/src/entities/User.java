@@ -16,7 +16,7 @@ public class User {
 	private int id;
 	private String pseudo;
 	private String email;
-	private transient String password;
+	private String password;
 	private int right;
 	
 	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)

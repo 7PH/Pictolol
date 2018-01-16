@@ -25,9 +25,12 @@ public class Controller extends HttpServlet {
         /* Only action allowed without csrf token */
         if (op != null && op.equals("load")) {
             JsonObject json = new JsonObject();
-            json.addProperty("csrf_name", APIHelper.CSRF_TOKEN_NAME);
-            json.addProperty("csrf_value", APIHelper.getCsrfToken(session));
-            APIHelper.exit(response, true, "ok", json);
+            json.addProperty("csrfName", APIHelper.CSRF_TOKEN_NAME);
+            json.addProperty("csrfValue", APIHelper.getCsrfToken(session));
+            json.addProperty("idUser", (Integer)session.getAttribute("idUser"));
+            json.addProperty("pseudoUser", (String)session.getAttribute("pseudoUser"));
+            request.setAttribute("gaveCsrfToken", true);
+            APIHelper.exit(response, false, "ok", json);
         }
 
         if (! PRODUCTION) {
