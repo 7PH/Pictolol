@@ -31,6 +31,7 @@ public class Controller extends HttpServlet {
             json.addProperty("csrfValue", APIHelper.getCsrfToken(session));
             json.addProperty("idUser", (Integer)session.getAttribute("idUser"));
             json.addProperty("pseudoUser", (String)session.getAttribute("pseudoUser"));
+            json.addProperty("ip", APIHelper.getClientIp(request));
             request.setAttribute("gaveCsrfToken", true);
             APIHelper.exit(response, false, "ok", json);
         }

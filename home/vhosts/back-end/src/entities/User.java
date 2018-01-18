@@ -1,5 +1,8 @@
 package entities;
 
+import com.google.gson.JsonObject;
+import utils.Jsonable;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,7 +12,7 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-public class User {
+public class User implements Jsonable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -30,6 +33,15 @@ public class User {
 
 	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
 	List<ImageLike> imageLikes;
+
+	@Override
+	public JsonObject toJson() {
+		JsonObject json = new JsonObject();
+		json.addProperty("id", this.getId());
+		json.addProperty("pseudo", this.getPseudo());
+		json.addProperty("email", this.getEmail());
+		return json;
+	}
 
     public static String hashPassword(String password) {
         password = "@{-" + password + "-}@";

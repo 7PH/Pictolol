@@ -41,7 +41,7 @@ public class ImageViewFacade {
 		em.remove(iv);
 	}
 	public List<ImageView> imageViews(){
-		TypedQuery<ImageView> req = em.createQuery("FROM ImageView iv",ImageView.class);
+		TypedQuery<ImageView> req = em.createQuery("FROM ImageView iv", ImageView.class);
 		return req.getResultList();
 	}
 	
@@ -59,14 +59,24 @@ public class ImageViewFacade {
 		iv.setImage(null);
 	}
 	public void deleteImageViewFromImageBeforeDate(int idImage, Date date){
-		String sql = "delete FROM ImageView iv where iv.id.imageId="+idImage+" and iv.id.date<="+date;
-		em.createQuery(sql);
+		String sql = "DELETE FROM ImageView iv where iv.id.imageId = ?1 and iv.id.date <= ?2";
+		Query req = em.createQuery(sql);
+		req.setParameter(1, idImage);
+		req.setParameter(2, date);
+		req.executeUpdate();
 	}
-	public int isView(String ip,int idImage){
-		Query req = em.createQuery("select count(iv.id.ip) FROM ImageView iv where iv.id.imageId="+idImage+" and iv.id.ip="+ip);
-		@SuppressWarnings("unchecked")
-		List<Long> list=req.getResultList();
-		if(list.size()>0)return (new Long((Long)list.get(0))).intValue();
+
+	/**
+	 * Caution: 'ip' must be escaped for sql injection
+	 * @return
+	 */
+	public int isView(String ip, int idImage){
+		Query req = em.createQuery("select count(iv.id.ip) FROM ImageView iv where iv.id.imageId = ?1 and iv.id.ip = ?2");
+		req.setParameter(1, idImage);
+		req.setParameter(2, ip);
+		List list = req.getResultList();
+		if (list.size() > 0)
+		    return ((Long)list.get(0)).intValue();
 		return 0;
 	}
 	

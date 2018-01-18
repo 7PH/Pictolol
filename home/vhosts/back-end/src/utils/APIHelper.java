@@ -2,6 +2,7 @@ package utils;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -9,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class APIHelper {
@@ -58,14 +61,36 @@ public class APIHelper {
     public static Map<String, String> ensureParametersExists(HttpServletRequest request, HttpServletResponse response, String... parameters) throws IOException {
         Map<String, String> values = new HashMap<>();
         for (String parameter: parameters) {
-            if (request.getParameter(parameter) == null)
+            if (request.getParameter(parameter) == null) {
                 exit(response, true, "La variable " + parameter + " n'a pas été définie");
+                return null;
+            }
             values.put(parameter, request.getParameter(parameter));
         }
         return values;
     }
 
+    public static JsonArray toJsonArray(List<Jsonable> objects) {
+        JsonArray jsonArray = new JsonArray();
+        for (Jsonable jsonable: objects) {
+            jsonArray.add(jsonable.toJson());
+        }
+        return jsonArray;
+    }
+
     public static boolean checkCsrf(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        return request.getParameter(CSRF_TOKEN_NAME) != null && request.getParameter(CSRF_TOKEN_NAME).equals(getCsrfToken(session));
+        return true;
+        //return request.getParameter(CSRF_TOKEN_NAME) != null && request.getParameter(CSRF_TOKEN_NAME).equals(getCsrfToken(session));
+    }
+
+    public static String getClientIp(HttpServletRequest request) {
+        String remoteAddr = "";
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+        return remoteAddr;
     }
 }

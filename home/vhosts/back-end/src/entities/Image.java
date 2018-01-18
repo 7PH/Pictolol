@@ -1,5 +1,8 @@
 package entities;
 
+import com.google.gson.JsonObject;
+import utils.Jsonable;
+
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,7 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Image {
+public class Image implements Jsonable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -41,6 +44,18 @@ public class Image {
 	
 	@OneToMany(mappedBy="image",fetch=FetchType.EAGER)
 	List<ImageView> imageViews;
+
+	@Override
+	public JsonObject toJson() {
+	    JsonObject json = new JsonObject();
+	    json.addProperty("id", this.getId());
+	    json.addProperty("user", this.getUser() == null ? 0 : this.getUser().getId());
+	    json.addProperty("url", this.getUrl());
+        json.addProperty("title", this.getTitle());
+        json.addProperty("views", this.getView());
+	    json.add("category", this.getCategory().toJson());
+		return json;
+	}
 	
 	public Image() {
 		super();
@@ -133,7 +148,6 @@ public class Image {
 	public void setImageLikes(List<ImageLike> imageLikes) {
 		this.imageLikes = imageLikes;
 	}
-
 }
 
 

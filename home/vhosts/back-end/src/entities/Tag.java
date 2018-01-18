@@ -1,5 +1,8 @@
 package entities;
 
+import com.google.gson.JsonObject;
+import utils.Jsonable;
+
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -9,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 @Entity
-public class Tag {
+public class Tag implements Jsonable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -18,6 +21,14 @@ public class Tag {
 	
 	@ManyToMany
 	private List<Image> images;
+
+	@Override
+	public JsonObject toJson() {
+		JsonObject json = new JsonObject();
+		json.addProperty("id", this.getId());
+		json.addProperty("tag", this.getTag());
+		return json;
+	}
 
 	public Tag() {
 		super();

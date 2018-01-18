@@ -64,6 +64,7 @@ public class UserController extends Controller {
             /* Inscription */
             case "register":
                 data = APIHelper.ensureParametersExists(request, response, "pseudo", "email", "password");
+                if (data == null) return;
                 userFacade.addUser(data.get("pseudo"), data.get("email"), User.hashPassword(data.get("password")));
                 APIHelper.exit(response, false, "Vous avez bien créé votre compte");
                 break;
@@ -72,6 +73,7 @@ public class UserController extends Controller {
             /* Login */
             case "login":
                 data = APIHelper.ensureParametersExists(request, response, "pseudo", "password");
+                if (data == null) return;
 
                 // prevent bruteforce attack
                 try {
@@ -92,6 +94,7 @@ public class UserController extends Controller {
             /* User edit */
             case "edit":
                 data = APIHelper.ensureParametersExists(request, response, "pseudo", "email", "password");
+                if (data == null) return;
 
                 if (session.getAttribute("idUser") == "0") {
                     APIHelper.errorExit(response, "L'utilisateur n'existe pas");
@@ -127,13 +130,14 @@ public class UserController extends Controller {
             /* Specific user info */
             case "detail":
                 data = APIHelper.ensureParametersExists(request, response, "id");
+                if (data == null) return;
 
                 user = userFacade.getUserById(Integer.parseInt(data.get("id")));
                 if (user == null) {
                     APIHelper.errorExit(response, "Unable to find this user");
                 } else {
                     List < Collection > collections = collectionFacade.collectionsByUser(Integer.parseInt(data.get("id")));
-                    json.add("user", gson.toJsonTree(user));
+                    json.add("user", user.toJson());
                     json.add("collections", gson.toJsonTree(collections));
                     APIHelper.exit(response, false, "ok", json);
                 }
@@ -143,6 +147,7 @@ public class UserController extends Controller {
             /* User's images */
             case "images":
                 data = APIHelper.ensureParametersExists(request, response, "id");
+                if (data == null) return;
 
                 user = userFacade.getUserById(Integer.parseInt(data.get("id")));
                 if (user == null) {
@@ -157,6 +162,7 @@ public class UserController extends Controller {
             /* Add collection */
             case "addcollection":
                 data = APIHelper.ensureParametersExists(request, response, "description");
+                if (data == null) return;
                 collectionFacade.addCollection(data.get("description"));
                 APIHelper.exit(response, false, "ok");
                 break;
@@ -165,6 +171,7 @@ public class UserController extends Controller {
             /* Edit collection */
             case "editcollection":
                 data = APIHelper.ensureParametersExists(request, response, "id", "description");
+                if (data == null) return;
 
                 Collection collection = collectionFacade.getCollectionById(Integer.parseInt(data.get("id")));
                 if (collection == null) {
@@ -181,6 +188,7 @@ public class UserController extends Controller {
             /* Delete collection */
             case "deletecollection":
                 data = APIHelper.ensureParametersExists(request, response, "id");
+                if (data == null) return;
 
                 collection = collectionFacade.getCollectionById(Integer.parseInt(data.get("id")));
                 if (collection == null) {
@@ -203,6 +211,7 @@ public class UserController extends Controller {
             /* Specific collection info */
             case "collection":
                 data = APIHelper.ensureParametersExists(request, response, "id");
+                if (data == null) return;
 
                 collection = collectionFacade.getCollectionById(Integer.parseInt(data.get("id")));
                 if (collection == null) {

@@ -58,7 +58,7 @@ public class UserFacade {
 	}
 	
 	public void viewUpdate(){
-		String sql = "update Image i set i.view=(select count(im.imageId) from ImageView im where im.imageId=i.id)";
+		String sql = "update Image i set i.view = (select count(im.imageId) from ImageView im where im.imageId=i.id)";
 		em.createQuery(sql);
 	}
 	public User verifyUser(String pseudo, String password){
