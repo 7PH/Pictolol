@@ -7,6 +7,7 @@ import {User} from '../models/User';
 import {Collection} from '../models/Collection';
 import {APIHelper} from './api/APIHelper';
 import {APIResponse} from './api/APIResponse';
+import {Category} from '../models/Category';
 
 @Injectable()
 export class PictissouService {
@@ -24,12 +25,12 @@ export class PictissouService {
 
     public user: User = {id: 0, pseudo: ''};
 
-    constructor(private api: APIHelper) {
+    constructor(public readonly api: APIHelper) {
         this.load();
     }
 
     /**
-     * Load the service
+     * On page load
      */
     public load() {
         this.api.load((response: APIResponse) => {
@@ -40,7 +41,7 @@ export class PictissouService {
         });
     }
 
-
+    /** Account */
     register(pseudo: string, password: string, email: string) {
         return this.api.doRequest('Users', {
             'do': 'register',
@@ -57,36 +58,58 @@ export class PictissouService {
         });
     }
     logout() {
-        this.user = {
-            id: 0,
-            pseudo: '*Guest'
-        };
+        return this.api.doRequest('Users', {
+            'do': 'logout'
+        });
     }
     isLogged() {
         return this.user.id > 0;
     }
 
 
-
+    /** Images */
     getImages(): Observable<Image[]> {
-        return of(PictissouService.IMAGES);
+        return this.api.doRequest('Images', {
+                'do': 'images'
+            })
+            .map(response => response.data as Image[]);
     }
-
     getImage(id: number): Observable<Image> {
-        return of(PictissouService.IMAGES.filter(image => { return image.id === id; })[0]);
+        return this.api.doRequest('Images', {
+            'do': 'detailimage',
+            'id': id.toString()
+        }).map(response => response.data as Image);
     }
-    addImage(url: string) {
-        PictissouService.IMAGES.push({
-            id: ++ PictissouService.IMAGE_AI,
-            url: url
+    addImage(url: string, title: string, idc: number): Observable<APIResponse> {
+        return this.api.doRequest('Images', {
+            'do': 'addimage',
+            'url': url,
+            'title': title,
+            'idc': idc.toString()
+        });
+    }
+    getCategories(): Observable<Category[]> {
+        return this.api.doRequest('Images', {
+            'do': 'categories'
+        }).map(response => response.data);
+    }
+    addCategory(description: string): Observable<APIResponse> {
+        return this.api.doRequest('Images', {
+            'do': 'addcategory',
+            'description': description
+        });
+    }
+    deleteCategory(id: number): Observable<APIResponse> {
+        return this.api.doRequest('Images', {
+            'do': 'deletecategory',
+            'idc': id.toString()
         });
     }
 
-
+    /** Collections */
     getCollections() {
         return of(PictissouService.COLLECTIONS);
     }
-
     getCollection(id: number) {
         return of(PictissouService.COLLECTIONS.filter(collection => { return collection.id === id; })[0]);
     }

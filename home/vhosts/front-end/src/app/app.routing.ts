@@ -42,12 +42,20 @@ export const routes: Routes = [
                 loadChildren: './views/add-image/add-image.module#AddImageModule'
             },
             {
+                path: 'categories',
+                loadChildren: './views/categories/categories.module#CategoriesModule'
+            },
+            {
                 path: 'collections',
                 loadChildren: './views/collections/collections.module#CollectionsModule'
             },
             {
                 path: 'collection/:id',
                 loadChildren: './views/collection/collection.module#CollectionModule'
+            },
+            {
+                path: 'api',
+                loadChildren: './views/api/api.module#ApiModule'
             },
         ]
     }

@@ -5,9 +5,11 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AddImageComponent } from './add-image';
 import { AddImageRoutingModule } from './add-image-routing.module';
 import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
     imports: [
+        CommonModule,
         AddImageRoutingModule,
         ChartsModule,
         BsDropdownModule,
