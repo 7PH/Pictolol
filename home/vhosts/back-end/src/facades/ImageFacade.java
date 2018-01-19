@@ -48,13 +48,13 @@ public class ImageFacade {
 		addImageToCategory(idi,idCat);
 	}
 	public void editImage(int id, String url, String title){
-		Image i=em.find(Image.class, id);
+		Image i = em.find(Image.class, id);
 		i.setUrl(url);
 		i.setTitle(title);
 		em.persist(i);
 	}
 	public void deleteImage(int id){
-		Image i=em.find(Image.class, id);
+		Image i = em.find(Image.class, id);
 		em.remove(i);
 	}
 	public void viewUpdate(){
@@ -88,8 +88,8 @@ public class ImageFacade {
 		return c.getImages();
 	}
 	public void addImageToCategory(int idImage, int idCategory){
-		Image i=em.find(Image.class, idImage);
-		Category c=em.find(Category.class, idCategory);
+		Image i = em.find(Image.class, idImage);
+		Category c = em.find(Category.class, idCategory);
 		i.setCategory(c);
 	}
 	public void deleteImageFromCategory(int idImage){

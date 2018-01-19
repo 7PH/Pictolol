@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import entities.*;
@@ -19,6 +20,8 @@ import utils.APIHelper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 /**
  * Servlet implementation class CommentController
  */
@@ -46,74 +49,75 @@ public class CommentController extends Controller {
             return;
         }
 
+        /* var */
+        boolean error;
+        Map<String, String> data;
+        Date date = new Date();
+        int idUser;
+        JsonArray dt = new JsonArray();
+
         /* Loading route parameter */
         String op = request.getParameter("do");
+
 
 
 		switch (op) {
 
 			case "addComment":
-				int idImage = Integer.parseInt(request.getParameter("idImage"));
-				String textComment = request.getParameter("text");
-				boolean error = true;
-				if (session.getAttribute("idUser") != null && idImage > 0 && textComment != null) {
-					int idUser = (int) session.getAttribute("idUser");
-					Date date = new Date();
-					date.getTime();
-					int idc = commentFacade.addImageComment(textComment, date);
-					commentFacade.addCommentToImage(idc, idImage);
-					commentFacade.addImageCommentToUser(idc, idUser);
-					error = false;
-					String message = "addComment";
-					JsonObject j = new JsonObject();
-					j.addProperty("error", error);
-					j.addProperty("message", message);
-					response.setContentType("application/json");
-					response.getWriter().print(j);
-				}
+			    data = APIHelper.ensureParametersExists(request, response, "idImage", "text");
+			    if (data == null) return;
+
+				int idImage = Integer.parseInt(data.get("idImage"));
+
+                idUser = (int) session.getAttribute("idUser");
+                if (idUser == 0) {
+                    APIHelper.exit(response, true, "Vous devez être connecté pour poster un commentaire");
+                } else {
+                    int idc = commentFacade.addImageComment(data.get("text"), new Date());
+                    commentFacade.addCommentToImage(idc, idImage);
+                    commentFacade.addImageCommentToUser(idc, idUser);
+                    APIHelper.exit(response, false, "Commentaire bien enregistré");
+                }
+                break;
 
 			case "editComment":
-				int idComment = Integer.parseInt(request.getParameter("idComment"));
-				error = true;
-				String text = request.getParameter("text");
+                data = APIHelper.ensureParametersExists(request, response, "idComment", "text");
+                if (data == null) return;
+
+				int idComment = Integer.parseInt(data.get("idComment"));
+				String text = data.get("text");
 				if (idComment > 0 && text != null) {
-					Date date = new Date();
-					date.getTime();
 					commentFacade.editImageComment(idComment, text, date);
-					error = false;
-					String message = "editComment";
-					JsonObject j = new JsonObject();
-					j.addProperty("error", error);
-					j.addProperty("message", message);
-					response.setContentType("application/json");
-					response.getWriter().print(j);
+					APIHelper.exit(response, false, "Commentaire modifié");
 				}
+                break;
 
 			case "deleteComment":
-				int idDelete = Integer.parseInt(request.getParameter("idComment"));
-				error = true;
-				if (idDelete > 0) {
-					commentFacade.deleteImageComment(idDelete);
-					error = false;
-					String message = "deleteComment";
-					JsonObject j = new JsonObject();
-					j.addProperty("error", error);
-					j.addProperty("message", message);
-					response.setContentType("application/json");
-					response.getWriter().print(j);
-				}
+                data = APIHelper.ensureParametersExists(request, response, "idComment");
+                if (data == null) return;
+
+				int idDelete = Integer.parseInt(request.getParameter(data.get("idComment")));
+                commentFacade.deleteImageComment(idDelete);
+
+                APIHelper.exit(response, false, "Commentaire supprimé");
+                break;
 
 			case "imageComments":
-				idImage = Integer.parseInt(request.getParameter("idImage"));
+				data = APIHelper.ensureParametersExists(request, response, "idImage");
+				if (data == null) return;
+
+				idImage = Integer.parseInt(data.get("idImage"));
 				if (idImage > 0) {
-					List < ImageComment > lic = commentFacade.imageCommentsByImage(idImage);
-					String json = new Gson().toJson(lic);
-					response.setContentType("application/json");
-					response.getWriter().print(json);
+					List <ImageComment> lic = commentFacade.imageCommentsByImage(idImage);
+					for (ImageComment ic: lic) {
+					    dt.add(ic.toJson());
+                    }
+					APIHelper.exit(response, false, "ok", dt);
 				}
+                break;
 
 			case "userComments":
-				int idUser = Integer.parseInt(request.getParameter("idUser"));
+				idUser = Integer.parseInt(request.getParameter("idUser"));
 				if (idUser > 0) {
 					commentFacade.imageCommentsByUser(idUser);
 					List < ImageComment > luc = commentFacade.imageCommentsByUser(idUser);
@@ -121,12 +125,14 @@ public class CommentController extends Controller {
 					response.setContentType("application/json");
 					response.getWriter().print(json);
 				}
+                break;
 
 			case "comments":
 				List < ImageComment > lc = commentFacade.ImageComments();
 				String json = new Gson().toJson(lc);
 				response.setContentType("application/json");
 				response.getWriter().print(json);
+                break;
 
 		}
 	}

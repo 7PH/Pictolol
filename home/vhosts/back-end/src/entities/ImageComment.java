@@ -1,5 +1,8 @@
 package entities;
 
+import com.google.gson.JsonObject;
+import utils.Jsonable;
+
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -9,7 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class ImageComment {
+public class ImageComment implements Jsonable {
+
+	@Override
+	public JsonObject toJson() {
+		JsonObject json = new JsonObject();
+		json.addProperty("id", this.getId());
+		json.addProperty("comment", this.getComment());
+		json.add("image", this.getImage().toJson());
+		return json;
+	}
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -66,5 +78,4 @@ public class ImageComment {
 	public void setImage(Image image) {
 		this.image = image;
 	}
-
 }

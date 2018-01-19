@@ -22,5 +22,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Commentaires</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12" *ngFor="let comment of image?.comments">
+                            <p>
+                                <b>{{comment.id}}</b> - <b>{{ comment.comment }}</b><br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

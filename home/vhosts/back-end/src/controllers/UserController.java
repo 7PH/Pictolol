@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import entities.*;
@@ -46,6 +47,7 @@ public class UserController extends Controller {
         String op = request.getParameter("do");
 
         /* Data used in the controller */
+        JsonArray dt = new JsonArray();
         JsonObject json = new JsonObject();
         Map<String, String> data;
         User user;
@@ -75,9 +77,9 @@ public class UserController extends Controller {
                 data = APIHelper.ensureParametersExists(request, response, "pseudo", "password");
                 if (data == null) return;
 
-                // prevent bruteforce attack
+                // prevent bruteforce attack because Nginx limits request number
                 try {
-                    Thread.sleep(2);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {  }
 
                 user = userFacade.verifyUser(data.get("pseudo"), User.hashPassword(data.get("password")));
@@ -86,7 +88,7 @@ public class UserController extends Controller {
                 else {
                     session.setAttribute("idUser", user.getId());
                     session.setAttribute("pseudoUser", user.getPseudo());
-                    APIHelper.exit(response, false, "ok", user);
+                    APIHelper.exit(response, false, "ok", user.toJson());
                 }
                 break;
 
@@ -123,7 +125,10 @@ public class UserController extends Controller {
             /* Users */
             case "list":
                 List <User> users = userFacade.users();
-                APIHelper.exit(response, false, "ok", users);
+                for (User u: users) {
+                    dt.add(u.toJson());
+                }
+                APIHelper.exit(response, false, "ok", dt);
                 break;
 
 

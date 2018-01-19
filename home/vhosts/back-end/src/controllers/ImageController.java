@@ -35,6 +35,10 @@ public class ImageController extends Controller {
     private
     ImageViewFacade imageViewFacade;
 
+    @EJB
+    private
+    ImageCommentFacade commentFacade;
+
     private Gson gson = new Gson();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -66,6 +70,8 @@ public class ImageController extends Controller {
             /* Category add */
             case "addcategory":
                 data = APIHelper.ensureParametersExists(request, response, "description");
+                if (data == null) return;
+
                 imageFacade.addCategory(data.get("description"));
                 APIHelper.exit(response, false, "Vous avez bien créé votre catégorie");
                 break;
@@ -73,6 +79,8 @@ public class ImageController extends Controller {
             /* Category edit */
             case "editcategory":
                 data = APIHelper.ensureParametersExists(request, response, "idc", "description");
+                if (data == null) return;
+
                 Category category = imageFacade.getCategoryById(Integer.parseInt(data.get("idc")));
                 if (category == null) {
                     APIHelper.errorExit(response, "Cette catégorie n'existe pas");
@@ -85,6 +93,8 @@ public class ImageController extends Controller {
             /* Category delete */
             case "deletecategory":
                 data = APIHelper.ensureParametersExists(request, response, "idc");
+                if (data == null) return;
+
                 if (session.getAttribute("idUser") == "0") {
                     APIHelper.errorExit(response, "Vous n'êtes pas connecté");
                 } else {
@@ -108,6 +118,8 @@ public class ImageController extends Controller {
             /* Image add */
             case "addimage":
                 data = APIHelper.ensureParametersExists(request, response, "url", "title", "idc");
+                if (data == null) return;
+
                 int idUser = (int) session.getAttribute("idUser");
                 imageFacade.ajoutImage(data.get("url"), data.get("title"), Integer.parseInt(data.get("idc")), idUser);
                 APIHelper.exit(response, false, "Vous avez bien créé votre image");
@@ -116,10 +128,12 @@ public class ImageController extends Controller {
             /* Image edit */
             case "editimage":
                 data = APIHelper.ensureParametersExists(request, response, "url", "title", "idi");
+                if (data == null) return;
+
                 Image image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Cette image n'existe pas");
-                } else if (image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
+                } else if (image.getUser() == null || image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
                     APIHelper.errorExit(response, "Cette image ne vous appartient pas");
                 } else {
                     imageFacade.editImage(Integer.parseInt(data.get("idi")), data.get("url"), data.get("title"));
@@ -130,10 +144,12 @@ public class ImageController extends Controller {
             /* Image delete */
             case "deleteimage":
                 data = APIHelper.ensureParametersExists(request, response, "idi");
+                if (data == null) return;
+
                 image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Cette image n'existe pas");
-                } else if (image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
+                } else if (image.getUser() == null || image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
                     APIHelper.errorExit(response, "Cette image ne vous appartient pas");
                 } else {
                     imageFacade.deleteImage(Integer.parseInt(data.get("idi")));
@@ -153,6 +169,8 @@ public class ImageController extends Controller {
             /* Specific image info */
             case "detailimage":
                 data = APIHelper.ensureParametersExists(request, response, "id");
+                if (data == null) return;
+
                 data.put("ip", APIHelper.getClientIp(request));
 
                 int idi = Integer.parseInt(data.get("id"));
@@ -167,6 +185,12 @@ public class ImageController extends Controller {
                         image = imageFacade.getImageById(idi);
                     }
                     json = image.toJson();
+
+                    List <ImageComment> lic = commentFacade.imageCommentsByImage(image.getId());
+                    for (ImageComment ic: lic) {
+                        dt.add(ic.toJson());
+                    }
+                    json.add("comments", dt);
                     // json.add("tags", APIHelper.toJsonArray(tags));
                     // json.add("comments", gson.toJsonTree(comments));
                     // json.add("nbrLikes", gson.toJsonTree(nbrLikes));
@@ -177,6 +201,8 @@ public class ImageController extends Controller {
             /* Category's images */
             case "imagesbycategory":
                 data = APIHelper.ensureParametersExists(request, response, "idc");
+                if (data == null) return;
+
                 category = imageFacade.getCategoryById(Integer.parseInt(data.get("idc")));
                 if (category == null) {
                     APIHelper.errorExit(response, "Unable to find this category");
@@ -189,6 +215,8 @@ public class ImageController extends Controller {
             /* Add image to category */
             case "addimagetocategory":
                 data = APIHelper.ensureParametersExists(request, response, "idc", "idi");
+                if (data == null) return;
+
                 category = imageFacade.getCategoryById(Integer.parseInt(data.get("idc")));
                 if (category == null) {
                     APIHelper.errorExit(response, "Unable to find this category");
@@ -201,6 +229,8 @@ public class ImageController extends Controller {
             /* Delete image from category */
             case "deleteimagefromcategory":
                 data = APIHelper.ensureParametersExists(request, response, "idi");
+                if (data == null) return;
+
                 image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Cette image n'existe pas");
@@ -215,6 +245,8 @@ public class ImageController extends Controller {
             /* Image's views */
             case "viewsbyimage":
                 data = APIHelper.ensureParametersExists(request, response, "idi");
+                if (data == null) return;
+
                 image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Unable to find this image");
@@ -227,6 +259,8 @@ public class ImageController extends Controller {
             /* Delete view from image */
             case "deleteviewfromimage":
                 data = APIHelper.ensureParametersExists(request, response, "idi");
+                if (data == null) return;
+
                 image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Cette image n'existe pas");
@@ -241,6 +275,8 @@ public class ImageController extends Controller {
             /* Delete view from image */
             case "deleteviewfromimagebeforedate":
                 data = APIHelper.ensureParametersExists(request, response, "idi", "date");
+                if (data == null) return;
+
                 image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Cette image n'existe pas");
@@ -259,6 +295,8 @@ public class ImageController extends Controller {
             /* Search images */
             case "searchimages":
                 data = APIHelper.ensureParametersExists(request, response, "chaine");
+                if (data == null) return;
+
                 images = imageFacade.searchByTitle(data.get("chaine"));
                 APIHelper.exit(response, false, "ok", images);
                 break;
