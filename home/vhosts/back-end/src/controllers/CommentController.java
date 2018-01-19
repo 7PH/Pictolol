@@ -96,7 +96,7 @@ public class CommentController extends Controller {
                 data = APIHelper.ensureParametersExists(request, response, "idComment");
                 if (data == null) return;
 
-				int idDelete = Integer.parseInt(request.getParameter(data.get("idComment")));
+				int idDelete = Integer.parseInt(data.get("idComment"));
                 commentFacade.deleteImageComment(idDelete);
 
                 APIHelper.exit(response, false, "Commentaire supprimé");

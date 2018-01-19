@@ -1,0 +1,35 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Categories</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div *ngFor="let category of categories" class="col-sm-12">
+                            <p>Categorie <b>{{ category.id }}</b>: <b>{{ category.cat }}</b> - <a href="javascript:" (click)="deleteCategory(category)">Supprimer</a> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Categories</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <input [(ngModel)]="newCategoryDescription" type="text" class="form-control" id="new-category" placeholder="Nouvelle categorie">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-primary" type="submit" (click)="addCategory()"><i class="fa fa-dot-circle-o"></i> Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

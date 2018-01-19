@@ -1,0 +1,80 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>API</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="servlet">Servlet</label>
+                                <input [(ngModel)]="servlet" type="text" class="form-control" id="servlet" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="operation">Opération</label>
+                                <input [(ngModel)]="operation" type="text" class="form-control" id="operation" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <button class="btn btn-sm btn-primary" type="submit" (click)="send()"><i class="fa fa-dot-circle-o"></i> Envoyer</button>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="paramNames[0]">Paramètre 0 - Nom</label>
+                                <input [(ngModel)]="paramNames[0]" type="text" class="form-control" id="paramNames[0]" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="paramValues[0]">Paramètre 0 - Valeur</label>
+                                <input [(ngModel)]="paramValues[0]" type="text" class="form-control" id="paramValues[0]" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="paramNames[1]">Paramètre 1 - Nom</label>
+                                <input [(ngModel)]="paramNames[1]" type="text" class="form-control" id="paramNames[1]" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="paramValues[1]">Paramètre 1 - Valeur</label>
+                                <input [(ngModel)]="paramValues[1]" type="text" class="form-control" id="paramValues[1]" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="paramNames[2]">Paramètre 2 - Nom</label>
+                                <input [(ngModel)]="paramNames[2]" type="text" class="form-control" id="paramNames[2]" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="paramValues[2]">Paramètre 2 - Valeur</label>
+                                <input [(ngModel)]="paramValues[2]" type="text" class="form-control" id="paramValues[2]" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Résultat</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <pre>{{ result }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

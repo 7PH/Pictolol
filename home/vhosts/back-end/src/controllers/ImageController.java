@@ -133,7 +133,7 @@ public class ImageController extends Controller {
                 Image image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Cette image n'existe pas");
-                } else if (image.getUser() == null || image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
+                } else if (image.getUser() != null && image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
                     APIHelper.errorExit(response, "Cette image ne vous appartient pas");
                 } else {
                     imageFacade.editImage(Integer.parseInt(data.get("idi")), data.get("url"), data.get("title"));
@@ -149,7 +149,7 @@ public class ImageController extends Controller {
                 image = imageFacade.getImageById(Integer.parseInt(data.get("idi")));
                 if (image == null) {
                     APIHelper.errorExit(response, "Cette image n'existe pas");
-                } else if (image.getUser() == null || image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
+                } else if (image.getUser() != null && image.getUser().getId() != (Integer) session.getAttribute("idUser")) {
                     APIHelper.errorExit(response, "Cette image ne vous appartient pas");
                 } else {
                     imageFacade.deleteImage(Integer.parseInt(data.get("idi")));
