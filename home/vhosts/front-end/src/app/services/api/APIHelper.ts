@@ -9,7 +9,7 @@ import {RequestOptions} from '@angular/http';
 @Injectable()
 export class APIHelper {
 
-    public static readonly API_HOST = 'jee.risibank.fr';
+    public static readonly API_HOST = 'xxxxxx';
     public static readonly API_PORT = 80;
     public static readonly API_PATH = '/pictissou/';
 
